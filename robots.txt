@@ -1,0 +1,8 @@
+# KonNx — https://www.konnx.com
+User-agent: *
+Allow: /
+
+Sitemap: https://www.konnx.com/sitemap.xml
+
+# Block the root redirect shell (canonical pages live under /pages/)
+Disallow: /index.html

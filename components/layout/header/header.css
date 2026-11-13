@@ -1,0 +1,652 @@
+/* ============================================================
+   Site header
+   - Logo far left, nav far right.
+   - Above 1024px: full nav + circular search icon.
+   - At/below 1024px: burger; nav becomes a full-viewport overlay.
+   - Hides on scroll-down / reveals on scroll-up via .is-hidden.
+   Literal values, no tokens. camelCase classes (rules.txt).
+   ============================================================ */
+
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  overflow: visible;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.01);
+  transition:
+    background-color 0.35s ease-in-out,
+    border-color 0.35s ease-in-out,
+    box-shadow 0.35s ease-in-out;
+}
+
+.siteHeader.is-hidden {
+  transform: translateY(-100%);
+  transition:
+    transform 0.18s ease-out,
+    background-color 0.35s ease-in-out,
+    border-color 0.35s ease-in-out,
+    box-shadow 0.35s ease-in-out;
+}
+
+/* Keep the sticky bar above the mobile nav overlay while the menu is open */
+.siteHeader.is-navOpen {
+  z-index: 320;
+}
+
+.siteHeaderInner {
+  box-sizing: border-box;
+  width: 100%;
+  height: 5.5rem;
+  display: flex;
+  align-items: center;
+  padding: 0 2.5rem;
+}
+
+/* ---- Brand ---- */
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 20;
+}
+
+.siteHeader .brand {
+  height: 2.75rem;
+  transition: height 0.35s ease-in-out;
+}
+
+.brandLogo {
+  display: block;
+  height: 100%;
+  width: auto;
+  transition: filter 0.35s ease-in-out, opacity 0.35s ease-in-out;
+}
+
+.brandLogo--hero {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+  /* The hero photo behind the transparent header varies in brightness/colour,
+     so the white mark can read as dull grey without a touch of contrast. */
+  filter: drop-shadow(0 0.05rem 0.35rem rgba(0, 0, 0, 0.45));
+}
+
+/* ---- Primary nav (desktop) ---- */
+
+.nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 2rem;
+  margin-left: auto;
+}
+
+.headerSearch {
+  position: relative;
+  z-index: 5;
+  order: 5;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+}
+
+.nav a,
+.navDropdownToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #263978;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  margin-top: 0.25rem;
+  transition: color 0.35s ease-in-out;
+}
+
+.nav a:hover,
+.navDropdownToggle:hover {
+  color: #ff6a14;
+}
+
+.navDropdown {
+  position: relative;
+}
+
+.navDropdownCaret {
+  width: 0.85em;
+  height: 0.85em;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.navDropdown.is-open .navDropdownCaret {
+  transform: rotate(180deg);
+}
+
+.navDropdownMenu {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  min-width: 16rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 0;
+  z-index: 10;
+}
+
+/* Invisible bridge so hover isn't lost when moving cursor to dropdown */
+.navDropdownMenu::before {
+  content: "";
+  position: absolute;
+  top: -1rem;
+  left: 0;
+  right: 0;
+  height: 1rem;
+}
+
+.navDropdown.is-open .navDropdownMenu {
+  display: flex;
+}
+
+.navDropdownMenu a {
+  padding: 0.65rem 1.75rem;
+  margin: 0;
+  white-space: nowrap;
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #263978;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.navDropdownMenu a:hover {
+  color: #ff6a14;
+}
+
+/* ---- Header actions ---- */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  margin-left: 0;
+  position: relative;
+  z-index: 20;
+}
+
+/* Expanding desktop search — closed state matches the original circular button.
+   Open state (width, white pill, results panel) lives in search.css. */
+.headerSearchBar {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+}
+
+.searchToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  border: none;
+  background: rgba(38, 57, 120, 0.08);
+  color: #263978;
+  cursor: pointer;
+  transition:
+    background-color 0.35s ease-in-out,
+    color 0.35s ease-in-out,
+    border-color 0.35s ease-in-out;
+}
+
+.searchToggle svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.searchToggleClose {
+  opacity: 0;
+}
+
+.headerSearch.is-open .searchToggleSearch {
+  opacity: 0;
+}
+
+.headerSearch.is-open .searchToggleClose {
+  opacity: 1;
+}
+
+.searchToggle:hover {
+  background: rgba(38, 57, 120, 0.16);
+}
+
+/* ---- Animated burger (Uiverse-style, sized for the 5.5rem header) ---- */
+
+.navToggle {
+  display: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.navToggle span {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 0.15rem;
+  margin-top: -0.095rem;
+  background: #263978;
+  border-radius: 9px;
+  opacity: 1;
+  transform-origin: center;
+  transition: transform 0.25s ease-in-out, opacity 0.25s ease-in-out;
+}
+
+/* ---- Home page top state ----
+   Only the home page gets a transparent header while sitting at the top of
+   the hero. Nav text, search icon, and burger switch to white, then
+   smoothly transition back to the default header treatment on scroll.
+   Logo swaps to a blue + white hero mark for contrast over the image. */
+
+.homePage .siteHeader {
+  position: fixed;
+  left: 0;
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+}
+
+.homePage .siteHeader:not(.is-homeSolid):not(.is-navOpen) .brandLogo--default {
+  opacity: 0;
+}
+
+.homePage .siteHeader:not(.is-homeSolid):not(.is-navOpen) .brandLogo--hero {
+  opacity: 1;
+}
+
+/* Home-only: slightly larger mark while the header is transparent over the hero.
+   Shrinks back to the site-wide 2.75rem with the same 0.35s ease as the
+   transparent → solid background swap (.is-homeSolid). */
+.homePage .siteHeader:not(.is-homeSolid):not(.is-navOpen) .brand {
+  height: 3.15rem;
+}
+
+.homePage .siteHeader .nav a,
+.homePage .siteHeader .navDropdownToggle,
+.homePage .siteHeader .searchToggle,
+.homePage .siteHeader .navToggle {
+  color: #ffffff;
+}
+
+.homePage .siteHeader .nav a:hover,
+.homePage .siteHeader .navDropdownToggle:hover {
+  color: #ff6a14;
+}
+
+.homePage .siteHeader .searchToggle {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.homePage .siteHeader .searchToggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.homePage .siteHeader .navToggle span {
+  color: #ffffff;
+}
+
+.homePage .siteHeader .navToggle span {
+  background: #ffffff;
+}
+
+.homePage .siteHeader .navDropdownMenu a {
+  color: #263978;
+}
+
+.homePage .siteHeader .navDropdownMenu a:hover {
+  color: #ff6a14;
+}
+
+.homePage .siteHeader.is-homeSolid {
+  background: #ffffff;
+  border-bottom-color: rgba(0, 0, 0, 0.05);
+  box-shadow: none;
+}
+
+.homePage .siteHeader.is-homeSolid .nav a,
+.homePage .siteHeader.is-homeSolid .navDropdownToggle,
+.homePage .siteHeader.is-homeSolid .searchToggle,
+.homePage .siteHeader.is-homeSolid .navToggle {
+  color: #263978;
+}
+
+.homePage .siteHeader.is-homeSolid .nav a:hover,
+.homePage .siteHeader.is-homeSolid .navDropdownToggle:hover {
+  color: #ff6a14;
+}
+
+.homePage .siteHeader.is-homeSolid .searchToggle {
+  background: rgba(38, 57, 120, 0.08);
+}
+
+.homePage .siteHeader.is-homeSolid .searchToggle:hover {
+  background: rgba(38, 57, 120, 0.16);
+}
+
+.homePage .siteHeader.is-homeSolid .navToggle span {
+  background: #263978;
+}
+
+.navToggle span:nth-of-type(1) {
+  transform: translateY(-0.62rem);
+}
+
+.navToggle span:nth-of-type(2) {
+  transform: none;
+}
+
+.navToggle span:nth-of-type(3) {
+  transform: translateY(0.62rem);
+}
+
+.navToggle.is-open span:nth-of-type(1) {
+  transform: rotate(45deg);
+}
+
+.navToggle.is-open span:nth-of-type(2) {
+  opacity: 0;
+}
+
+.navToggle.is-open span:nth-of-type(3) {
+  transform: rotate(-45deg);
+}
+
+/* ---- Mobile: full-viewport nav overlay ---- */
+
+@media (max-width: 1024px) {
+  .siteHeader.is-navOpen,
+  .homePage .siteHeader.is-navOpen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: #ffffff;
+    transform: none;
+  }
+
+  .siteHeaderInner {
+    position: relative;
+    z-index: 30;
+    padding: 0 1.25rem;
+  }
+
+  .siteHeader.is-navOpen .siteHeaderInner,
+  .homePage .siteHeader.is-navOpen .siteHeaderInner {
+    background: #ffffff;
+  }
+
+  /* Opaque bar above the overlay so logo/X stay visible while the
+     sheet slides, including on close, and while the menu scrolls. */
+  .siteHeader.is-navOpen .siteHeaderInner::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5.5rem;
+    z-index: 35;
+    background: #ffffff;
+    pointer-events: none;
+    transform: translateZ(0);
+  }
+
+  .brand,
+  .headerActions {
+    z-index: 40;
+    transform: translateZ(0);
+  }
+
+  .headerActions {
+    margin-left: auto;
+  }
+
+  .navToggle {
+    display: block;
+  }
+
+  .homePage .siteHeader.is-navOpen .navToggle span {
+    background: #263978;
+  }
+
+  .homePage .siteHeader .nav > a,
+  .homePage .siteHeader .navDropdownToggle,
+  .homePage .siteHeader.is-navOpen .nav > a,
+  .homePage .siteHeader.is-navOpen .navDropdownToggle {
+    color: #000000;
+  }
+
+  .homePage .siteHeader .nav > a:hover,
+  .homePage .siteHeader .navDropdownToggle:hover,
+  .homePage .siteHeader.is-navOpen .nav > a:hover,
+  .homePage .siteHeader.is-navOpen .navDropdownToggle:hover {
+    color: #ff6a14;
+  }
+
+  .homePage .siteHeader .searchToggle,
+  .homePage .siteHeader.is-navOpen .searchToggle {
+    background: rgba(38, 57, 120, 0.08);
+    color: #263978;
+  }
+
+  .homePage .siteHeader .searchToggle:hover,
+  .homePage .siteHeader.is-navOpen .searchToggle:hover {
+    background: rgba(38, 57, 120, 0.16);
+  }
+
+  .nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    padding: 6.75rem 1.5rem 2.5rem;
+    background: #ffffff;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+
+    transform: translateY(-100%);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0s linear 0.45s;
+  }
+
+  .nav.is-open {
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0s linear 0s;
+  }
+
+  .headerSearch {
+    order: 0;
+    width: 100%;
+    height: auto;
+    margin: 0 0 1.75rem;
+  }
+
+  .headerSearchBar {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    width: 100%;
+    height: 2.75rem;
+    overflow: visible;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.05);
+  }
+
+  .headerSearchForm {
+    opacity: 1;
+    pointer-events: auto;
+    overflow: visible;
+  }
+
+  .headerSearchInput {
+    padding-left: 1.15rem;
+    pointer-events: auto;
+  }
+
+  .nav.is-searching > a,
+  .nav.is-searching .navDropdown {
+    display: none;
+  }
+
+  .nav > a,
+  .navDropdownToggle {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    margin: 0;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    text-transform: none;
+    color: #000000;
+    transition: none;
+  }
+
+  .nav > a:hover,
+  .navDropdownToggle:hover {
+    color: #ff6a14;
+  }
+
+  .navDropdown {
+    width: 100%;
+  }
+
+  .navDropdownCaret {
+    width: 1rem;
+    height: 1rem;
+    margin-left: auto;
+  }
+
+  .navDropdownMenu {
+    position: static;
+    box-shadow: none;
+    border: 0;
+    margin: 0;
+    padding: 0 0 0.5rem 0.25rem;
+    background: transparent;
+    min-width: 0;
+  }
+
+  .navDropdown.is-open .navDropdownMenu {
+    display: flex;
+  }
+
+  .navDropdownMenu a {
+    padding: 0.75rem 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    color: rgba(0, 0, 0, 0.65);
+    border-bottom: 0;
+  }
+
+  .navDropdownMenu a:hover {
+    background: transparent;
+    color: #ff6a14;
+  }
+}
+
+@media (max-width: 480px) {
+  .siteHeaderInner {
+    padding: 0 1rem;
+  }
+
+  .nav {
+    padding: 6.75rem 1.25rem 2rem;
+  }
+
+  .nav > a,
+  .navDropdownToggle {
+    font-size: 1.5rem;
+    padding: 0.9rem 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav > a,
+  .navDropdownToggle {
+    font-size: 1.35rem;
+  }
+}

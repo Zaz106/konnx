@@ -1,0 +1,144 @@
+<!-- → WordPress: get_header() / get_template_part('template-parts/layout/header')
+     Ends with </body> sentinel for Live Server — stripped by includes.js. -->
+<a class="skipLink" href="#main">Skip to content</a>
+<header class="siteHeader">
+  <div class="siteHeaderInner">
+    <a class="brand" href="/pages/index.html" aria-label="KonNx home">
+      <img
+        class="brandLogo brandLogo--default"
+        src="/assets/images/KonNX Logo.svg"
+        alt="KonNx"
+        width="291"
+        height="80"
+        decoding="async"
+      />
+      <img
+        class="brandLogo brandLogo--hero"
+        src="/assets/images/KonNX Logo Hero.svg"
+        alt=""
+        width="291"
+        height="80"
+        decoding="async"
+        aria-hidden="true"
+      />
+    </a>
+
+    <nav class="nav" id="site-nav" aria-label="Primary">
+      <div class="headerSearch">
+        <div class="headerSearchBar">
+          <form class="headerSearchForm" role="search" autocomplete="off">
+            <label class="sr-only" for="header-search-input">Search</label>
+            <input
+              class="headerSearchInput"
+              type="search"
+              id="header-search-input"
+              name="q"
+              placeholder="Search KonNx"
+              aria-label="Search products"
+              autocomplete="off"
+              tabindex="-1"
+            />
+          </form>
+          <button
+            class="searchToggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="header-search-panel"
+            aria-label="Search"
+          >
+            <svg
+              class="searchToggleSearch"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" />
+              <line
+                x1="21"
+                y1="21"
+                x2="16.65"
+                y2="16.65"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <svg
+              class="searchToggleClose"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 5l14 14M19 5L5 19"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="headerSearchPanel"
+          id="header-search-panel"
+          hidden
+          role="region"
+          aria-label="Search results"
+        ></div>
+      </div>
+
+      <a href="/pages/index.html">Home</a>
+
+      <div class="navDropdown">
+        <button
+          class="navDropdownToggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="products-menu"
+        >
+          Products
+          <svg
+            class="navDropdownCaret"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <polyline
+              points="6 9 12 15 18 9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div class="navDropdownMenu" id="products-menu">
+          <a href="/pages/products/low-voltage-connectors/index.html">Low Voltage Connectors</a>
+          <a href="/pages/products/high-voltage-connectors/index.html">High Voltage Connectors</a>
+        </div>
+      </div>
+
+      <a href="/pages/about-us/index.html">About KonNx</a>
+      <a href="/pages/contact-us/index.html">Contact Us</a>
+    </nav>
+
+    <div class="headerActions">
+      <!-- Animated burger (bars → X). -->
+      <button
+        class="navToggle"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="site-nav"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</header>
+</body>

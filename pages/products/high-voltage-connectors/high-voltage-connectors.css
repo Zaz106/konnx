@@ -1,0 +1,974 @@
+/* Low Voltage page — pages/low-voltage/low-voltage.css
+   Every value is literal (no CSS custom properties) so this file is fully
+   self-contained — nothing needs to be traced back to global.css.
+   Breakpoints: 1920 / 1600 / 1024 / 768 / 480 / 420 / 380 (rules.txt).
+   Media queries sit directly under the selector they scale — no clamp(). */
+
+.accent {
+  color: #ff6a14;
+}
+
+/* ---- Layout shells ---- */
+.section {
+  width: 100%;
+  padding: 4.5rem 2rem;
+}
+
+@media (max-width: 1600px) {
+  .section {
+    padding: 4rem 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 3rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2.5rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 2.25rem 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section {
+    padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .section {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ---- Shared heading ---- */
+.sectionTitle {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 4.25rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #000000;
+  margin: 0 0 2rem;
+}
+
+@media (max-width: 1600px) {
+  .sectionTitle {
+    font-size: 3.75rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sectionTitle {
+    font-size: 3.125rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sectionTitle {
+    font-size: 2.625rem;
+    margin: 0 0 1.35rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionTitle {
+    font-size: 2.375rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .sectionTitle {
+    font-size: 2.25rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .sectionTitle {
+    font-size: 2rem;
+    margin: 0 0 1rem;
+  }
+}
+
+/* ---- Shared pill button chrome: components/ui/cta/cta.css ---- */
+
+/* ---- 1. Hero ---- */
+/* Stack: photo (0) → dark overlay (1) → corner arcs (2) → text/CTA (3) */
+.section.heroSection {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 60vh;
+  padding: 4.5rem 8rem;
+  background-image: url("../../../assets/images/general/high voltage hero.webp");
+  background-size: cover;
+  background-position: center;
+  background-color: #ffffff;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+@media (max-width: 1600px) {
+  .section.heroSection {
+    min-height: 58vh;
+    padding: 4rem 5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section.heroSection {
+    min-height: 55vh;
+    padding: 3.5rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section.heroSection {
+    min-height: 52vh;
+    padding: 3rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section.heroSection {
+    min-height: 50vh;
+    padding: 2.5rem 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section.heroSection {
+    min-height: 48vh;
+    padding: 2.25rem 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .section.heroSection {
+    min-height: 46vh;
+    padding: 2rem 1rem;
+  }
+}
+
+.heroSection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.heroArc {
+  position: absolute;
+  z-index: 2;
+  width: 15rem;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 1600px) {
+  .heroArc {
+    width: 13.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroArc {
+    width: 11.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroArc {
+    width: 9.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroArc {
+    width: 7.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroArc {
+    width: 6.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .heroArc {
+    width: 5.75rem;
+  }
+}
+
+.heroArcTopLeft {
+  top: 0;
+  left: 0;
+  transform: rotate(180deg);
+}
+
+.heroArcBottomRight {
+  bottom: 0;
+  right: 0;
+}
+
+.heroSection .container {
+  position: relative;
+  z-index: 3;
+  max-width: none;
+  margin: 0;
+  width: 100%;
+}
+
+.heroContent {
+  text-align: left;
+}
+
+.heroTitle {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 5.75rem;
+  font-weight: 400;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 2rem;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 1600px) {
+  .heroTitle {
+    font-size: 5.125rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 4.25rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 3.5rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 3.125rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroTitle {
+    font-size: 2.875rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .heroTitle {
+    font-size: 2.5rem;
+    margin: 0 0 1rem;
+  }
+}
+
+/* Hero CTA chrome: components/ui/cta/cta.css (add .heroCta for entrance animation) */
+
+/* ---- 2. Intro text band ---- */
+.introSection {
+  background: #ffffff;
+  text-align: center;
+}
+
+.introContent {
+  max-width: 1100px;
+  margin: 2rem auto 0;
+}
+
+@media (max-width: 1600px) {
+  .introContent {
+    margin: 3rem auto 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introContent {
+    margin: 2.75rem auto 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .introContent {
+    margin: 2.5rem auto 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .introContent {
+    margin: 2.25rem auto 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .introContent {
+    margin: 2rem auto 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .introContent {
+    margin: 1.75rem auto 0;
+  }
+}
+
+.introLead {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 3.5rem;
+  font-weight: 400;
+  color: #000000;
+  margin: 0 0 2rem;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+}
+
+@media (max-width: 1600px) {
+  .introLead {
+    font-size: 3.125rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introLead {
+    font-size: 2.75rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introLead {
+    font-size: 2.375rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introLead {
+    font-size: 2.125rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introLead {
+    font-size: 2rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introLead {
+    font-size: 1.875rem;
+    margin: 0 0 1rem;
+  }
+}
+
+.introBody {
+  font-size: 1.25rem;
+  font-weight: 300;
+  color: #000000;
+  margin: 0;
+  letter-spacing: -0.035em;
+  line-height: 1.5;
+}
+
+@media (max-width: 1600px) {
+  .introBody {
+    font-size: 1.1875rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introBody {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introBody {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introBody {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introBody {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introBody {
+    font-size: 0.875rem;
+  }
+}
+
+/* ---- 3 & 4. Product grids ---- */
+/* Title + grid share the same content rail so the heading
+   left edge lines up with the first card. */
+.aluminiumSection,
+.flameproofSection {
+  background: #ffffff;
+}
+
+.aluminiumSection .container,
+.flameproofSection .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.aluminiumSection .sectionTitle,
+.flameproofSection .sectionTitle {
+  width: 100%;
+  max-width: calc(3 * 420px + 2 * 1rem);
+}
+
+@media (max-width: 1600px) {
+  .aluminiumSection .sectionTitle,
+  .flameproofSection .sectionTitle {
+    max-width: calc(3 * 420px + 2 * 0.875rem);
+  }
+}
+
+@media (max-width: 1024px) {
+  .aluminiumSection .sectionTitle,
+  .flameproofSection .sectionTitle {
+    max-width: calc(2 * 420px + 0.875rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .aluminiumSection .sectionTitle,
+  .flameproofSection .sectionTitle {
+    max-width: 420px;
+  }
+}
+
+.productGrid {
+  display: grid;
+  width: 100%;
+  max-width: calc(3 * 420px + 2 * 1rem);
+  grid-template-columns: repeat(3, minmax(0, 420px));
+  justify-content: center;
+  gap: 1rem;
+}
+
+@media (max-width: 1600px) {
+  .productGrid {
+    max-width: calc(3 * 420px + 2 * 0.875rem);
+    gap: 0.875rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productGrid {
+    max-width: calc(2 * 420px + 0.875rem);
+    grid-template-columns: repeat(2, minmax(0, 420px));
+    gap: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .productGrid {
+    max-width: 420px;
+    grid-template-columns: minmax(0, 420px);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productGrid {
+    gap: 0.875rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .productGrid {
+    gap: 0.75rem;
+  }
+}
+
+.productCard {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.25s ease-in-out,
+    box-shadow 0.25s ease-in-out;
+}
+
+@media (max-width: 1024px) {
+  .productCard {
+    border-radius: 0.45rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .productCard {
+    border-radius: 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productCard {
+    border-radius: 0.35rem;
+  }
+}
+
+.productCard:hover {
+  transform: translateY(-0.2rem);
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
+}
+
+/* Image area: tinted bg → product image → corner arc */
+.cardImage {
+  position: relative;
+  aspect-ratio: 4 / 3.5;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.cardImage img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.cardImage::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 9.5rem;
+  aspect-ratio: 398 / 381;
+  background-image: url("../../../assets/images/Corner Arc.svg");
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: contain;
+  pointer-events: none;
+}
+
+@media (max-width: 1600px) {
+  .cardImage::after {
+    width: 8.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cardImage::after {
+    width: 7.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardImage::after {
+    width: 8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardImage::after {
+    width: 6.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .cardImage::after {
+    width: 5.75rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .cardImage::after {
+    width: 5.25rem;
+  }
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.1rem;
+  padding: 3rem 2rem;
+}
+
+@media (max-width: 1600px) {
+  .cardBody {
+    padding: 2.75rem 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cardBody {
+    padding: 2.25rem 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardBody {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardBody {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .cardBody {
+    padding: 1.5rem 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .cardBody {
+    padding: 1.35rem 1rem;
+  }
+}
+
+.cardMeta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+@media (max-width: 1024px) {
+  .cardMeta {
+    gap: 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardMeta {
+    gap: 0.3rem;
+  }
+}
+
+.cardName {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #000000;
+}
+
+@media (max-width: 1600px) {
+  .cardName {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cardName {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardName {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardName {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .cardName {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .cardName {
+    font-size: 1.1rem;
+  }
+}
+
+.cardSub {
+  font-size: 0.8rem;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: #000000;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+@media (max-width: 1600px) {
+  .cardSub {
+    font-size: 0.775rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cardSub {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardSub {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .cardSub {
+    font-size: 0.675rem;
+  }
+}
+
+.cardType {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  margin: 0 0 0.1rem;
+}
+
+@media (max-width: 1600px) {
+  .cardType {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cardType {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardType {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .cardType {
+    font-size: 0.8rem;
+  }
+}
+
+.cardSpec {
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: #ff6a14;
+  margin: 0 0 0.5rem;
+  flex: 1;
+}
+
+@media (max-width: 1600px) {
+  .cardSpec {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cardSpec {
+    font-size: 1rem;
+    margin: 0 0 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardSpec {
+    font-size: 0.95rem;
+    margin: 0 0 0.35rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .cardSpec {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .cardSpec {
+    font-size: 0.875rem;
+  }
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  position: relative;
+  color: #263978;
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 1600px) {
+  .cardLink {
+    font-size: 0.875rem;
+    margin-top: 0.65rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cardLink {
+    font-size: 0.85rem;
+    margin-top: 0.6rem;
+    gap: 0.35rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cardLink {
+    margin-top: 0.55rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardLink {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .cardLink {
+    font-size: 0.775rem;
+  }
+}
+
+.cardLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.2rem;
+  height: 1px;
+  background-color: #263978;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+.cardLink:hover::after {
+  transform: scaleX(1);
+}
+
+.cardLink svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: #263978;
+}
+
+@media (max-width: 1024px) {
+  .cardLink svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardLink svg {
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+}
+
+/* ---- Motion (hero only) ---- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Arc SVG wipe: reveals right → left in local coords.
+     Top-left is rotated 180°, so the same wipe reads as the
+     continuing half of a circle with the bottom-right arc. */
+  @keyframes heroArcReveal {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes heroFade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .heroArcTopLeft,
+  .heroArcBottomRight {
+    animation: heroArcReveal 1.8s cubic-bezier(0.45, 0, 0.2, 1) 0.2s both;
+  }
+
+  .heroTitle {
+    animation: heroFade 1.1s ease 0.35s both;
+  }
+
+  .heroCta {
+    animation: heroFade 1.1s ease 0.55s both;
+  }
+}

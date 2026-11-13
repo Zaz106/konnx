@@ -1,0 +1,1684 @@
+/* Home page — pages/home.css
+   Every value is literal (no CSS custom properties) so this file is fully
+   self-contained — nothing needs to be traced back to global.css.
+   Breakpoints: 1600 / 1024 / 768 / 480 / 420 / 380 (rules.txt).
+   Media queries sit directly under the selector they scale — no clamp(). */
+
+.accent {
+  color: #ff6a14;
+}
+
+/* ---- Layout shells ---- */
+.section {
+  width: 100%;
+  padding: 4.5rem 2rem;
+}
+
+@media (max-width: 1600px) {
+  .section {
+    padding: 4rem 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 3rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2.5rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 2.25rem 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section {
+    padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .section {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Pill CTA chrome lives in components/ui/cta/cta.css — do not redeclare .pillBtn here. */
+
+/* ============================================================
+   1. HERO SECTION
+   Full viewport width + height (minus sticky header).
+   Stack: photo (0) → soft gradient overlay (1) → content (2)
+   Padding — not a max-width container — keeps content off the edges.
+   ============================================================ */
+
+.section.heroSection {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100svh;
+  padding: 5rem 2.5rem 3rem;
+  /*background-image: url("../assets/images/general/home-page-1.webp");
+  background-size: cover;
+  background-position: center;
+  background-color: #0e1218;*/
+  color: #ffffff;
+  overflow: hidden;
+}
+
+@media (max-width: 1600px) {
+  .section.heroSection {
+    padding: 4.5rem 5rem 3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section.heroSection {
+    padding: 4rem 2.5rem 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section.heroSection {
+    padding: 3.5rem 1.25rem 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section.heroSection {
+    padding: 3rem 1rem 3rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section.heroSection {
+    padding: 2.75rem 1rem 3rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .section.heroSection {
+    padding: 2.5rem 1rem 2.25rem;
+  }
+}
+
+/* Soft full-bleed gradient — light at top, readable toward the bottom */
+.heroSection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.1) 35%,
+    rgba(0, 0, 0, 0.4) 60%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
+}
+
+/* Hero image background behind overlay */
+.heroImage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+/* Content anchored to the lower half */
+.heroInner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+}
+
+/* ---- Hero content row (heading + sub-text side by side) ---- */
+.heroContentRow {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  grid-template-areas:
+    "title subtext"
+    "cta subtext";
+  column-gap: 5rem;
+  row-gap: 2rem;
+  align-items: end;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .heroContentRow {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "subtext"
+      "cta";
+    column-gap: 0;
+    row-gap: 1.5rem;
+    align-items: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroContentRow {
+    row-gap: 1rem;
+  }
+}
+
+.heroTitle {
+  grid-area: title;
+}
+
+/* Layout + entrance only — pill chrome is in cta.css */
+.heroCta {
+  grid-area: cta;
+  justify-self: start;
+  align-self: end;
+  width: max-content;
+  max-width: 100%;
+  height: fit-content;
+}
+
+.heroSubText {
+  grid-area: subtext;
+  justify-self: end;
+}
+
+/* ---- Hero heading (same style as LV/HV pages) ---- */
+.heroTitle {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 6.25rem;
+  font-weight: 400;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 1600px) {
+  .heroTitle {
+    font-size: 6rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 5.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 5.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 4.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroTitle {
+    font-size: 4rem;
+  }
+}
+
+/* ---- Hero sub-text (right side OEM paragraph) ---- */
+.heroSubText {
+  max-width: 40rem;
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  flex-shrink: 0;
+  text-align: left;
+}
+
+.heroSubText .inlineTextLink {
+  color: #ffffff;
+}
+
+.heroSubText .inlineTextLink:hover {
+  color: #ff6a14;
+}
+
+@media (max-width: 1600px) {
+  .heroSubText {
+    max-width: 34rem;
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroSubText {
+    max-width: 28rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .heroSubText {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSubText {
+    font-size: 1.075rem;
+    text-align: left;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroSubText {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .heroSubText {
+    font-size: 1rem;
+  }
+}
+
+/* ---- Home motion ----
+   Signature language is the product Long Arc wipe and the coupler stroke
+   draw. Hero uses the same clip wipe; other bands only fade, so they do
+   not compete with those two set pieces. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes homeHeroWipe {
+    from {
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes homeHeroFade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .heroTitle {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    animation: homeHeroWipe 1.8s cubic-bezier(0.45, 0, 0.2, 1) 0.2s both;
+  }
+
+  .heroSubText {
+    opacity: 0;
+    animation: homeHeroFade 1.2s ease 0.7s both;
+  }
+
+  .heroCta {
+    opacity: 0;
+    animation: homeHeroFade 1.2s ease 0.95s both;
+  }
+
+  .homeReveal {
+    opacity: 0;
+    transition: opacity 1.1s ease;
+  }
+
+  .homeReveal.is-visible {
+    opacity: 1;
+  }
+
+  .introBody.homeReveal {
+    transition-delay: 0.18s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroTitle,
+  .heroSubText,
+  .heroCta,
+  .homeReveal {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    animation: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   2. INTRO SECTION
+   Copied from HV/LV connector pages (code for code).
+   Centered lead on a white band. .section padding applies.
+   ============================================================ */
+
+.introSection {
+  background: #ffffff;
+  text-align: center;
+}
+
+.introContent {
+  max-width: 1100px;
+  margin: 2rem auto 0;
+}
+
+@media (max-width: 1600px) {
+  .introContent {
+    margin: 3rem auto 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introContent {
+    margin: 2.75rem auto 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .introContent {
+    margin: 2.5rem auto 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .introContent {
+    margin: 2.25rem auto 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .introContent {
+    margin: 2rem auto 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .introContent {
+    margin: 1.75rem auto 0;
+  }
+}
+
+.introLead {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 3.5rem;
+  font-weight: 400;
+  color: #000000;
+  margin: 0 0 2rem;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+}
+
+@media (max-width: 1600px) {
+  .introLead {
+    font-size: 3.125rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introLead {
+    font-size: 2.75rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introLead {
+    font-size: 2.375rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introLead {
+    font-size: 2.125rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introLead {
+    font-size: 2rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introLead {
+    font-size: 1.875rem;
+    margin: 0 0 1rem;
+  }
+}
+
+.introBody {
+  font-size: 1.25rem;
+  font-weight: 300;
+  color: #000000;
+  margin: 0;
+  letter-spacing: -0.035em;
+  line-height: 1.5;
+}
+
+@media (max-width: 1600px) {
+  .introBody {
+    font-size: 1.1875rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introBody {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introBody {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introBody {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introBody {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introBody {
+    font-size: 0.875rem;
+  }
+}
+
+.inlineTextLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+/* ============================================================
+   3. PRODUCTS SECTION
+   Navy band + centred section title + two range cards.
+   Title scale matches LV/HV .sectionTitle. Cards stack ≤900px.
+   ============================================================ */
+
+.productsSection {
+  background: #263978;
+  color: #ffffff;
+  padding: 6rem 2rem;
+}
+
+@media (max-width: 1600px) {
+  .productsSection {
+    padding: 5.5rem 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productsSection {
+    padding: 4.5rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .productsSection {
+    padding: 4rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productsSection {
+    padding: 3.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .productsSection {
+    padding: 3rem 1.25rem;
+  }
+}
+
+.productsSection .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sectionTitle {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 4.25rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #000000;
+  margin: 0 0 2rem;
+}
+
+@media (max-width: 1600px) {
+  .sectionTitle {
+    font-size: 3.75rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sectionTitle {
+    font-size: 3.125rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sectionTitle {
+    font-size: 2.625rem;
+    margin: 0 0 1.35rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .sectionTitle {
+    font-size: 2.375rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .sectionTitle {
+    font-size: 2.25rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .sectionTitle {
+    font-size: 2rem;
+    margin: 0 0 1rem;
+  }
+}
+
+.productsHeading {
+  width: 100%;
+  max-width: calc(2 * 40rem + 1.5rem);
+  color: #ffffff;
+  text-align: center;
+  margin: 0 0 3.5rem;
+}
+
+@media (max-width: 1600px) {
+  .productsHeading {
+    max-width: calc(2 * 38rem + 1.25rem);
+    margin: 0 0 3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productsHeading {
+    max-width: calc(2 * 30rem + 1.25rem);
+    margin: 0 0 2.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .productsHeading {
+    max-width: 38rem;
+    margin: 0 0 2.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productsHeading {
+    margin: 0 0 2rem;
+  }
+}
+
+.productsGrid {
+  display: grid;
+  width: 100%;
+  max-width: calc(2 * 40rem + 1.5rem);
+  grid-template-columns: repeat(2, minmax(0, 40rem));
+  justify-content: center;
+  gap: 1.5rem;
+  scroll-margin-top: 6.5rem;
+  scroll-margin-bottom: 2rem;
+}
+
+@media (max-width: 1600px) {
+  .productsGrid {
+    max-width: calc(2 * 38rem + 1.25rem);
+    grid-template-columns: repeat(2, minmax(0, 38rem));
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productsGrid {
+    max-width: calc(2 * 30rem + 1.25rem);
+    grid-template-columns: repeat(2, minmax(0, 30rem));
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .productsGrid {
+    max-width: 38rem;
+    grid-template-columns: minmax(0, 38rem);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productsGrid {
+    gap: 1.25rem;
+  }
+}
+
+/* Card shell — overflow clips the full-bleed media arc */
+.productRangeCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  background: #ffffff;
+  border-radius: 1rem;
+  text-align: center;
+  color: #000000;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .productRangeCard {
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .productRangeCard {
+    aspect-ratio: auto;
+    min-height: 0;
+  }
+}
+
+/* Arc lives inside .productRangeMedia — 90% of the card, flush left.
+   The painted ribbon sits high in the SVG viewBox, so the anchor is
+   biased well below the media midpoint to put that ribbon through
+   the product centre. */
+.productRangeArc {
+  position: absolute;
+  left: 0;
+  top: 78%;
+  z-index: 0;
+  width: 90%;
+  height: auto;
+  transform: translateY(-50%);
+  pointer-events: none;
+  user-select: none;
+  clip-path: inset(0 100% 0 0);
+}
+
+/* Padded content layer */
+.productRangeContent {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  padding: 3rem 2.75rem 2.75rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1600px) {
+  .productRangeContent {
+    padding: 2.75rem 2.5rem 2.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productRangeContent {
+    padding: 2.5rem 2rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .productRangeContent {
+    padding: 2.25rem 1.75rem 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productRangeContent {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .productRangeContent {
+    padding: 1.75rem 1.25rem 1.35rem;
+  }
+}
+
+.productRangeTitle {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 2.75rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0 0 0.5rem;
+}
+
+@media (max-width: 1600px) {
+  .productRangeTitle {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productRangeTitle {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .productRangeTitle {
+    font-size: 2.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productRangeTitle {
+    font-size: 1.875rem;
+    margin: 0 0 0.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .productRangeTitle {
+    font-size: 1.75rem;
+  }
+}
+
+.productRangeText {
+  max-width: 32rem;
+  margin: 0 0 1.25rem;
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.025rem;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.04em;
+  color: #4a4a4a;
+}
+
+@media (max-width: 1600px) {
+  .productRangeText {
+    font-size: 1rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productRangeText {
+    font-size: 0.975rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productRangeText {
+    font-size: 0.95rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .productRangeText {
+    font-size: 0.9rem;
+  }
+}
+
+.productRangeMedia {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  /* Full-bleed to card edges so the arc’s left:0 / 80% match the card */
+  box-sizing: border-box;
+  width: calc(100% + 5.5rem);
+  margin: 0 -2.75rem 1.75rem;
+  min-height: 0;
+}
+
+@media (max-width: 1600px) {
+  .productRangeMedia {
+    width: calc(100% + 5rem);
+    margin: 0 -2.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productRangeMedia {
+    width: calc(100% + 4rem);
+    margin: 0 -2rem 1.35rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .productRangeMedia {
+    width: calc(100% + 3.5rem);
+    margin: 0 -1.75rem 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productRangeMedia {
+    width: calc(100% + 3rem);
+    margin: 0 -1.5rem 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .productRangeMedia {
+    width: calc(100% + 2.5rem);
+    margin: 0 -1.25rem 1.25rem;
+  }
+}
+
+.productRangeImage {
+  position: relative;
+  z-index: 1;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 25rem;
+  object-fit: contain;
+  filter: drop-shadow(0 0.25rem 0.5rem rgba(0, 0, 0, 0.05));
+}
+
+@media (max-width: 1600px) {
+  .productRangeImage {
+    max-height: 20rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .productRangeImage {
+    max-width: 100%;
+    max-height: 20rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .productRangeImage {
+    max-height: 20rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .productRangeImage {
+    max-width: 100%;
+    max-height: 16rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .productRangeImage {
+    max-height: 15rem;
+  }
+}
+
+/* Product card Long Arc — left → right wipe (same idea as LV/HV hero arcs) */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes productArcReveal {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  .productRangeCard.is-arcInView .productRangeArc {
+    animation: productArcReveal 1.25s cubic-bezier(0.45, 0, 0.2, 1) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .productRangeArc {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ============================================================
+   4. SAFETY / PERFORMANCE SECTION
+   Navy band, 1400px rail.
+   Desktop: video left, copy/icons right (centred in their column).
+   ≤1024: stacks as heading → body → video → icons.
+   High-res poster + YouTube play button; iframe loads on click.
+   ============================================================ */
+
+.safetySection {
+  background: #263978;
+  color: #ffffff;
+  padding: 6rem 2rem;
+}
+
+@media (max-width: 1600px) {
+  .safetySection {
+    padding: 5.5rem 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .safetySection {
+    padding: 4.5rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .safetySection {
+    padding: 4rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .safetySection {
+    padding: 3.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .safetySection {
+    padding: 3rem 1.25rem;
+  }
+}
+
+.safetyLayout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-areas:
+    "video heading"
+    "video body"
+    "video icons";
+  column-gap: 4rem;
+  row-gap: 1.5rem;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1600px) {
+  .safetyLayout {
+    column-gap: 3.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .safetyLayout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "heading"
+      "body"
+      "video"
+      "icons";
+    column-gap: 0;
+    row-gap: 1.5rem;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .safetyLayout {
+    row-gap: 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .safetyLayout {
+    row-gap: 1.25rem;
+  }
+}
+
+.safetyVideo {
+  grid-area: video;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 0.35rem;
+  background: #0e1218;
+  align-self: center;
+}
+
+@media (max-width: 1024px) {
+  .safetyVideo {
+    max-width: 56rem;
+  }
+}
+
+.safetyVideoPlay {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.safetyVideoPoster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.safetyVideoPlayIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 4.25rem;
+  height: auto;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0.15rem 0.45rem rgba(0, 0, 0, 0.35));
+  transition: transform 0.2s ease-in-out;
+}
+
+.safetyVideoPlayIcon svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.safetyVideoPlay:hover .safetyVideoPlayIcon {
+  transform: translate(-50%, -50%) scale(1.0);
+}
+
+@media (max-width: 768px) {
+  .safetyVideoPlayIcon {
+    width: 3.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .safetyVideoPlayIcon {
+    width: 3.25rem;
+  }
+}
+
+.safetyVideo iframe,
+.safetyVideo video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  object-fit: cover;
+}
+
+.safetyVideo.is-playing .safetyVideoPlay {
+  display: none;
+}
+
+.safetyHeading {
+  grid-area: heading;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+  justify-self: center;
+}
+
+@media (max-width: 1024px) {
+  .safetyHeading {
+    margin: 0;
+  }
+}
+
+.safetyBody {
+  grid-area: body;
+  max-width: 36rem;
+  margin: 0;
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  text-align: center;
+  justify-self: center;
+}
+
+@media (max-width: 1600px) {
+  .safetyBody {
+    font-size: 1.1875rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .safetyBody {
+    font-size: 1.125rem;
+    max-width: 42rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .safetyBody {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .safetyBody {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .safetyBody {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .safetyBody {
+    font-size: 0.875rem;
+  }
+}
+
+.safetyIcons {
+  grid-area: icons;
+  display: flex;
+  flex-wrap: wrap;
+  /* Top-align rather than center: every icon's circle starts at the very
+     top of its own artwork, so this is what keeps the circles level with
+     each other regardless of how many lines of caption text sit below. */
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2rem;
+  justify-self: center;
+  margin-top: 1rem;
+  --safetyIconD: 4.5rem;
+}
+
+@media (max-width: 1600px) {
+  .safetyIcons {
+    gap: 1.35rem;
+    --safetyIconD: 4.3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .safetyIcons {
+    gap: 1.25rem;
+    --safetyIconD: 4.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .safetyIcons {
+    --safetyIconD: 3.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .safetyIcons {
+    gap: 1rem;
+    --safetyIconD: 3.3rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .safetyIcons {
+    --safetyIconD: 3.1rem;
+  }
+}
+
+/* Each source SVG has its own canvas — a circle plus either one or two
+   lines of caption text — so a single square box shrinks the mark with
+   the taller canvas ("Full Earth Segregation") relative to the others.
+   Sizing each icon with its own width/height (matching its true aspect
+   ratio) keeps every circle the same, slightly larger, diameter — set by
+   --safetyIconD — while still giving the two-line caption room to breathe. */
+.safetyIcon {
+  display: block;
+  object-fit: contain;
+}
+
+.safetyIcon:nth-child(1) {
+  width: calc(var(--safetyIconD) * 1.0003);
+  height: calc(var(--safetyIconD) * 1.3276);
+}
+
+.safetyIcon:nth-child(2) {
+  width: calc(var(--safetyIconD) * 1.2795);
+  height: calc(var(--safetyIconD) * 1.6049);
+}
+
+.safetyIcon:nth-child(3) {
+  width: calc(var(--safetyIconD) * 1.2178);
+  height: calc(var(--safetyIconD) * 1.326);
+}
+
+.safetyIcon:nth-child(4) {
+  width: var(--safetyIconD);
+  height: var(--safetyIconD);
+}
+
+/* ============================================================
+   5. ENGINEERING INNOVATIONS SECTION
+   Grey band (#CECECC), 1400px rail.
+   Desktop: copy + coupler left (~55%), feature cards right (~45%).
+   ≤1024: stacks copy then cards. Title/body reuse section scales;
+   CTA uses shared .pillBtn (wider via .innovationsCta min-width).
+   ============================================================ */
+
+.innovationsSection {
+  background: #cececc;
+  color: #000000;
+  padding: 6rem 2rem;
+}
+
+@media (max-width: 1600px) {
+  .innovationsSection {
+    padding: 5.5rem 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .innovationsSection {
+    padding: 4.5rem 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .innovationsSection {
+    padding: 4rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .innovationsSection {
+    padding: 3.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .innovationsSection {
+    padding: 3rem 1.25rem;
+  }
+}
+
+.innovationsLayout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  grid-template-areas:
+    "copy cards"
+    "cta cards";
+  column-gap: 3.5rem;
+  row-gap: 0;
+  align-items: stretch;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1600px) {
+  .innovationsLayout {
+    column-gap: 3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .innovationsLayout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "copy"
+      "cta";
+    row-gap: 2.5rem;
+    column-gap: 0;
+    justify-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .innovationsLayout {
+    row-gap: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .innovationsLayout {
+    row-gap: 1.75rem;
+  }
+}
+
+.innovationsCopy {
+  grid-area: copy;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .innovationsCopy {
+    align-items: center;
+    text-align: center;
+    max-width: 42rem;
+  }
+}
+
+.innovationsHeading {
+  margin: 0 0 1.5rem;
+  text-align: left;
+}
+
+@media (max-width: 1024px) {
+  .innovationsHeading {
+    text-align: center;
+  }
+}
+
+.innovationsBody {
+  max-width: 40rem;
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  color: #000000;
+  text-align: left;
+}
+
+@media (max-width: 1600px) {
+  .innovationsBody {
+    font-size: 1.1875rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .innovationsBody {
+    font-size: 1.125rem;
+    max-width: 42rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .innovationsBody {
+    font-size: 1.0625rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .innovationsBody {
+    font-size: 1rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .innovationsBody {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .innovationsBody {
+    font-size: 0.875rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+.innovationsImage {
+  display: block;
+  width: 100%;
+  max-width: 32rem;
+  height: auto;
+  margin: 1rem 0 1rem;
+  user-select: none;
+  pointer-events: none;
+  aspect-ratio: 792 / 468;
+}
+
+.innovationsImage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.innovationsImage.is-ready svg {
+  opacity: 1;
+}
+
+.innovationsImage img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.innovationsImage path {
+  fill: none;
+}
+
+@media (max-width: 1600px) {
+  .innovationsImage {
+    max-width: 30rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .innovationsImage {
+    max-width: 28rem;
+    margin: 1rem auto 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .innovationsImage {
+    max-width: 24rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .innovationsImage {
+    max-width: 20rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .innovationsImage {
+    max-width: 17.5rem;
+  }
+}
+
+.innovationsCta {
+  grid-area: cta;
+  min-width: 22rem;
+  margin-top: 2.5rem;
+  justify-self: start;
+}
+
+@media (max-width: 1600px) {
+  .innovationsCta {
+    min-width: 21rem;
+    margin-top: 2.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .innovationsCta {
+    min-width: 20rem;
+    margin-top: 0;
+    justify-self: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .innovationsCta {
+    min-width: 18.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .innovationsCta {
+    min-width: 17rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .innovationsCta {
+    min-width: 16rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .innovationsCta {
+    min-width: 15rem;
+  }
+}
+
+.innovationsCards {
+  grid-area: cards;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1.15rem;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  align-self: stretch;
+  justify-self: stretch;
+}
+
+@media (max-width: 1600px) {
+  .innovationsCards {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .innovationsCards {
+    display: none;
+  }
+}
+
+.innovationsCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  flex: 1 1 0;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 0;
+  padding: 1.5rem 2rem;
+  background: #ffffff;
+  border-radius: 0.85rem;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.07);
+  transition:
+    transform 0.25s ease-in-out,
+    box-shadow 0.25s ease-in-out;
+}
+
+@media (max-width: 1600px) {
+  .innovationsCard {
+    padding: 1.35rem 1.75rem;
+  }
+}
+
+.innovationsCard:hover {
+  box-shadow: 0 0.45rem 1.5rem rgba(0, 0, 0, 0.1);
+}
+
+.innovationsCardIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  color: #263978;
+  line-height: 0;
+}
+
+.innovationsCardIcon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.innovationsCardText {
+  margin: 0;
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 2.15rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+@media (max-width: 1600px) {
+  .innovationsCardText {
+    font-size: 1.9rem;
+  }
+}
+

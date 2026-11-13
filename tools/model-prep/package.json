@@ -1,0 +1,17 @@
+{
+  "name": "konnx-model-prep",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Developer tool: turns a CAD-export GLB into a web-ready GLB for the product-page 3D viewer. Not part of the site.",
+  "type": "module",
+  "scripts": {
+    "optimize": "node optimize-model.mjs"
+  },
+  "dependencies": {
+    "@gltf-transform/core": "4.5.1",
+    "@gltf-transform/extensions": "4.5.1",
+    "@gltf-transform/functions": "4.5.1",
+    "meshoptimizer": "1.3.0",
+    "sharp": "0.35.5"
+  }
+}

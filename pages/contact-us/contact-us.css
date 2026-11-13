@@ -1,0 +1,829 @@
+/* Contact Us page — hero + intro copied from the LV/HV connector pages.
+   Every value is literal (no CSS custom properties) so this file is fully
+   self-contained — nothing needs to be traced back to global.css.
+   Breakpoints: 1920 / 1600 / 1024 / 768 / 480 / 420 / 380 (rules.txt).
+   Media queries sit directly under the selector they scale — no clamp(). */
+
+.accent {
+  color: #ff6a14;
+}
+
+/* ---- Layout shells ---- */
+.section {
+  width: 100%;
+  padding: 4.5rem 2rem;
+}
+
+@media (max-width: 1600px) {
+  .section {
+    padding: 4rem 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 3rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2.5rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 2.25rem 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section {
+    padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .section {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ---- Shared pill button chrome: components/ui/cta/cta.css ---- */
+
+/* ---- 1. Hero ---- */
+/* Stack: photo (0) → dark overlay (1) → corner arcs (2) → text/CTA (3) */
+.section.heroSection {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 60vh;
+  padding: 4.5rem 8rem;
+  background-image: url("../../assets/images/general/contact us hero.webp");
+  background-size: cover;
+  background-position: center;
+  background-color: #ffffff;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+@media (max-width: 1600px) {
+  .section.heroSection {
+    min-height: 58vh;
+    padding: 4rem 5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section.heroSection {
+    min-height: 55vh;
+    padding: 3.5rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section.heroSection {
+    min-height: 52vh;
+    padding: 3rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section.heroSection {
+    min-height: 50vh;
+    padding: 2.5rem 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section.heroSection {
+    min-height: 48vh;
+    padding: 2.25rem 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .section.heroSection {
+    min-height: 46vh;
+    padding: 2rem 1rem;
+  }
+}
+
+.heroSection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.heroArc {
+  position: absolute;
+  z-index: 2;
+  width: 15rem;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 1600px) {
+  .heroArc {
+    width: 13.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroArc {
+    width: 11.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroArc {
+    width: 9.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroArc {
+    width: 7.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroArc {
+    width: 6.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .heroArc {
+    width: 5.75rem;
+  }
+}
+
+.heroArcTopLeft {
+  top: 0;
+  left: 0;
+  transform: rotate(180deg);
+}
+
+.heroArcBottomRight {
+  bottom: 0;
+  right: 0;
+}
+
+.heroSection .container {
+  position: relative;
+  z-index: 3;
+  max-width: none;
+  margin: 0;
+  width: 100%;
+}
+
+.heroContent {
+  text-align: left;
+}
+
+.heroTitle {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 5.75rem;
+  font-weight: 400;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 2rem;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 1600px) {
+  .heroTitle {
+    font-size: 5.125rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 4.25rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 3.5rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 3.125rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroTitle {
+    font-size: 2.875rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .heroTitle {
+    font-size: 2.5rem;
+    margin: 0 0 1rem;
+  }
+}
+
+/* Hero CTA chrome: components/ui/cta/cta.css (add .heroCta for entrance animation) */
+
+/* ---- 2. Intro text band ---- */
+.introSection {
+  background: #ffffff;
+  text-align: center;
+  padding: 8rem 2rem 9.5rem;
+}
+
+@media (max-width: 1600px) {
+  .introSection {
+    padding: 7rem 2rem 8.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introSection {
+    padding: 6rem 2.5rem 7.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introSection {
+    padding: 5.5rem 2rem 6.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introSection {
+    padding: 5rem 1.25rem 6.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introSection {
+    padding: 4.75rem 1.25rem 6rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introSection {
+    padding: 4.5rem 1.25rem 5.5rem;
+  }
+}
+
+.introContent {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.introLead {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 4.25rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #000000;
+  margin: 0 0 2rem;
+}
+
+@media (max-width: 1600px) {
+  .introLead {
+    font-size: 3.75rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introLead {
+    font-size: 3.125rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introLead {
+    font-size: 2.625rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introLead {
+    font-size: 2.375rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introLead {
+    font-size: 2.25rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introLead {
+    font-size: 2rem;
+    margin: 0 0 1rem;
+  }
+}
+
+.introBody {
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  color: #000000;
+  margin: 0;
+}
+
+@media (max-width: 1600px) {
+  .introBody {
+    font-size: 1.1875rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introBody {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introBody {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introBody {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introBody {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introBody {
+    font-size: 0.875rem;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- 3. Contact form panel ---- */
+/* Full-bleed — overrides generic .section padding/max-width. */
+.section.contactFormSection {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  background: #1a1a1a;
+}
+
+.contactFormPanel {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  min-height: 40rem;
+  padding: 4rem 5rem;
+  border-radius: 0;
+  overflow: hidden;
+  background-color: #1a1a1a;
+  background-image: url("../../assets/images/general/contact us background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 1600px) {
+  .contactFormPanel {
+    min-height: 38rem;
+    padding: 3.5rem 4rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contactFormPanel {
+    min-height: 0;
+    padding: 3rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .contactFormPanel {
+    padding: 2.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactFormPanel {
+    padding: 2rem 1.25rem;
+  }
+}
+
+.contactFormPanel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.72) 100%
+  );
+  pointer-events: none;
+}
+
+.contactFormCard {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 42rem;
+  padding: 3.5rem;
+  background: #ffffff;
+  border-radius: 1.25rem;
+}
+
+@media (max-width: 1600px) {
+  .contactFormCard {
+    max-width: 40rem;
+    padding: 3.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contactFormCard {
+    max-width: 38rem;
+    padding: 3rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .contactFormCard {
+    max-width: 100%;
+    padding: 2.25rem 2rem;
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactFormCard {
+    padding: 2rem 1.5rem;
+    border-radius: 0.85rem;
+  }
+}
+
+.contactFormTitle {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #000000;
+  margin: 0 0 0.5rem;
+}
+
+@media (max-width: 1600px) {
+  .contactFormTitle {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contactFormTitle {
+    font-size: 2rem;
+    margin: 0 0 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .contactFormTitle {
+    font-size: 1.75rem;
+    margin: 0 0 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactFormTitle {
+    font-size: 1.625rem;
+  }
+}
+
+.contactFormSubtitle {
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  color: #000000;
+  margin: 0 0 2rem;
+}
+
+@media (max-width: 1600px) {
+  .contactFormSubtitle {
+    font-size: 1.1875rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contactFormSubtitle {
+    font-size: 1.125rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .contactFormSubtitle {
+    font-size: 1.0625rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactFormSubtitle {
+    font-size: 1rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+.contactFormSubtitle a {
+  color: #263978;
+  font-weight: 400;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.contactFormSubtitle a:hover {
+  color: #ff6a14;
+}
+
+.contactFormRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .contactFormRow {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.contactFormGroup {
+  min-width: 0;
+}
+
+.contactFormField {
+  display: block;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.875rem 1.25rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  color: #0e1218;
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  transition: border-color 0.2s ease-in-out;
+}
+
+@media (max-width: 1024px) {
+  .contactFormField {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactFormField {
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    border-radius: 0.65rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .contactFormField {
+    font-size: 0.875rem;
+  }
+}
+
+.contactFormField::placeholder {
+  color: rgba(0, 0, 0, 0.45);
+  font-weight: 300;
+}
+
+.contactFormField:focus,
+.contactFormField:focus-visible {
+  outline: none;
+  border-color: #263978;
+}
+
+.contactFormFieldFull {
+  margin-bottom: 1rem;
+}
+
+.contactFormTextarea {
+  min-height: 9rem;
+  margin-bottom: 0;
+  resize: vertical;
+}
+
+.contactCharCounter {
+  margin: 0.25rem 0.125rem 0;
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.45);
+  text-align: right;
+}
+
+.contactEnquiryType {
+  margin: 1.5rem 0;
+}
+
+@media (max-width: 768px) {
+  .contactEnquiryType {
+    margin: 1.25rem 0;
+  }
+}
+
+.contactEnquiryLabel {
+  display: block;
+  margin-bottom: 1rem;
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #000000;
+}
+
+@media (max-width: 1024px) {
+  .contactEnquiryLabel {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactEnquiryLabel {
+    font-size: 0.9375rem;
+  }
+}
+
+.contactEnquiryButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .contactEnquiryButtons {
+    gap: 0.5rem;
+  }
+}
+
+.contactEnquiryBtn {
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #000000;
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}
+
+@media (max-width: 1024px) {
+  .contactEnquiryBtn {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactEnquiryBtn {
+    flex: 1 1 calc(50% - 0.25rem);
+    min-width: 0;
+    padding: 0.65rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+.contactEnquiryBtn:hover {
+  border-color: #263978;
+  background: #f5f7f9;
+}
+
+.contactEnquiryBtn.is-active {
+  background: #263978;
+  border-color: #263978;
+  color: #ffffff;
+}
+
+.contactFormSubmit {
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  margin-top: 1.5rem;
+}
+
+.contactFormSubmit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.contactFormSubmit:disabled:hover {
+  background-color: #263978;
+  color: #ffffff;
+}
+
+.contactFormSubmit:disabled .pillBtnArrow {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* ---- Motion (hero only) ---- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Arc SVG wipe: reveals right → left in local coords.
+     Top-left is rotated 180°, so the same wipe reads as the
+     continuing half of a circle with the bottom-right arc. */
+  @keyframes heroArcReveal {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes heroFade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .heroArcTopLeft,
+  .heroArcBottomRight {
+    animation: heroArcReveal 1.8s cubic-bezier(0.45, 0, 0.2, 1) 0.2s both;
+  }
+
+  .heroTitle {
+    animation: heroFade 1.1s ease 0.35s both;
+  }
+
+  .heroCta {
+    animation: heroFade 1.1s ease 0.55s both;
+  }
+}

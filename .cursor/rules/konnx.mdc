@@ -1,0 +1,21 @@
+---
+description: Mandatory KonNx site standards. Always apply before editing this repo.
+alwaysApply: true
+---
+
+# KonNx — follow RULES.md
+
+Before editing this repository, read and obey `RULES.md` at the project root. It is the source of truth. Do not invent a parallel structure, naming scheme, or styling system.
+
+Critical constraints (full detail is in RULES.md):
+
+- Static HTML/CSS/JS now. PHP/WordPress later — **do not convert until asked**. Keep `data-include` partials, WordPress comments, IIFE JavaScript, and root-absolute `/assets` and `/components` URLs.
+- Classes are camelCase (`heroSection`, `introLead`). Do not spread the footer's leftover BEM.
+- CSS uses literal values, no `clamp()`, breakpoints `1600 / 1024 / 768 / 480 / 420 / 380`, media queries directly under the selector they scale.
+- Headings: Archivo. Body: Calibri. Navy `#263978`. Orange `#ff6a14`. Grey `#cececc`.
+- Shared pills live in `components/ui/cta`. Do not redeclare `.pillBtn` in a page sheet.
+- `body.homePage` is home-only. The larger header logo and transparent bar exist only on home and must stay in sync via `.is-homeSolid` (`0.35s ease-in-out`). Do not change logo size on inner pages.
+- The Sales & Enquiries section is **deleted**. Do not recreate `components/layout/sales-enquiries/`. Enquiries go to `pages/contact-us/index.html#contactForm`.
+- Copy shared sections code-for-code. The home intro band matches the HV/LV `introSection`.
+- Every HTML partial ends with a `</body>` sentinel for Live Server.
+- Do not commit unless asked. Honour `prefers-reduced-motion`.

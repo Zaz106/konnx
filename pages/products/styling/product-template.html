@@ -1,0 +1,249 @@
+<!--
+  KonNx product page template — reference only, not a route.
+
+  Every page in pages/products/{high,low}-voltage-connectors/*/index.html is
+  built from this skeleton code-for-code. Copy it, then replace the {{TOKENS}}
+  and repeat the marked rows. Head block: copy from any existing product page.
+  The page body is <body data-header-pinned> so the header never hides on
+  scroll (the sticky media column is measured against it).
+
+  WordPress later: single-product template part.
+    {{PRODUCT_NAME}}    → the_title()
+    {{PRODUCT_CODE}}    → short code used in aria labels (e.g. 114BKA)
+    {{PRODUCT_SPEC}}    → ACF text   "spec_line"      (11,000V | 800A | 4 Bolt)
+    {{PRODUCT_BODY}}    → ACF wysiwyg "intro"
+    Gallery slides      → ACF gallery "product_images"
+    Spec rows           → ACF repeater "specifications" (label, value)
+    Download rows       → ACF file "test_report" + repeater "solid_files" (label, file)
+    Feature rows        → ACF repeater "features" (text)
+
+  [data-product-media] is the sticky left slot. It holds the image gallery
+  (below) or, on products with a GLB, the 3D viewer that replaces
+  .productGallery inside it (live example: EX124bssrf-range).
+
+  3D VIEWER VARIANT
+  Markup inside [data-product-media] (copy from the EX124bssrf-range page, it
+  includes the glass rotate SVG, the zoom/reset buttons and the hotspots):
+
+    .productViewer[data-product-viewer][data-model-src]
+      model-viewer.productViewerModel   camera-orbit / camera-target set per
+                                        product, <div slot="progress-bar"> empty
+        button.productViewerHotspot[slot="hotspot-*"][data-position][data-normal]
+      img.productViewerFallback[hidden] shown only if WebGL / the model fails
+      .productViewerRotate              glass hint, hides on first touch
+      .productViewerControls            zoom in / out / reset, show on first touch
+
+  Page head additions:
+    <link rel="preload" href="/assets/models/{{CODE}}/{{MODEL}}.glb" as="fetch" crossorigin />
+    <link rel="preload" href="/assets/js/vendor/meshopt-decoder.js" as="script" />
+    <script type="module" src="/assets/js/vendor/model-viewer.min.js"></script>
+    CSP: script-src + 'wasm-unsafe-eval', img-src + blob:, connect-src + data: blob:,
+    worker-src 'self' blob:
+    JSON-LD Product: "subjectOf": { "@type": "3DModel", "encoding": { "@type": "MediaObject",
+    "contentUrl": ".../model.glb", "encodingFormat": "model/gltf-binary" } }
+  Page end: <script src="../../styling/product-viewer.js"></script> after product-range.js.
+  Never put src on <model-viewer>; product-viewer.js sets it once the decoder is registered.
+
+  GLB prep (target under ~1 MB): tools/model-prep/optimize-model.mjs
+    cd tools/model-prep && npm install
+    node optimize-model.mjs <cad-export.glb> ../../assets/models/{{CODE}}/{{MODEL}}.glb
+  Keep POSITION unquantised: model-viewer mis-measures quantised bounds.
+
+  HOTSPOTS
+  Open the page with ?pickHotspot, click the model, and copy the logged
+  data-position / data-normal pair into a new <button slot="hotspot-name">.
+  Dots only, no visible labels. Give each button an aria-label taken from the
+  product's own copy (features / specifications).
+-->
+<main id="main">
+  <section class="section productSection" aria-label="{{PRODUCT_CODE}} product overview">
+    <div class="container">
+      <div class="productLayout">
+        <div class="productMedia" data-product-media>
+          <div class="productGallery" data-product-carousel>
+            <div class="productMainImage">
+              <!-- Repeat per image. First slide: is-active + fetchpriority="high" -->
+              <img
+                class="productSlide is-active"
+                src="{{IMAGE_SRC}}"
+                alt="{{IMAGE_ALT}}"
+                width="{{IMAGE_WIDTH}}"
+                height="{{IMAGE_HEIGHT}}"
+                decoding="async"
+                fetchpriority="high"
+                data-slide="0"
+              />
+              <div class="productDots" role="tablist" aria-label="Product image views">
+                <!-- Repeat per image -->
+                <button
+                  class="productDot is-active"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  aria-label="View main product image"
+                  data-slide-to="0"
+                ></button>
+              </div>
+            </div>
+            <div class="productThumbs" role="tablist" aria-label="Product image views">
+              <!-- Repeat per image -->
+              <button
+                class="productThumb is-active"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-label="View main product image"
+                data-slide-to="0"
+              >
+                <img
+                  src="{{IMAGE_SRC}}"
+                  alt=""
+                  width="{{IMAGE_WIDTH}}"
+                  height="{{IMAGE_HEIGHT}}"
+                  decoding="async"
+                  loading="lazy"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="productContent">
+          <div class="productIntro">
+            <h1 class="productTitle">{{PRODUCT_NAME}}</h1>
+            <p class="productSpec">{{PRODUCT_SPEC}}</p>
+            <p class="productBody">{{PRODUCT_BODY}}</p>
+          </div>
+
+          <div class="productTabs" data-product-tabs>
+            <div class="productTabList" role="tablist" aria-label="{{PRODUCT_CODE}} product information">
+              <button
+                class="productTab is-active"
+                id="productTab-specifications"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="productPanel-specifications"
+                data-tab-target="specifications"
+              >
+                Specifications
+              </button>
+              <button
+                class="productTab"
+                id="productTab-downloads"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="productPanel-downloads"
+                data-tab-target="downloads"
+                tabindex="-1"
+              >
+                Downloads
+              </button>
+              <button
+                class="productTab"
+                id="productTab-features"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="productPanel-features"
+                data-tab-target="features"
+                tabindex="-1"
+              >
+                Features &amp; Benefits
+              </button>
+            </div>
+
+            <div
+              class="productPanel is-active"
+              id="productPanel-specifications"
+              role="tabpanel"
+              aria-labelledby="productTab-specifications"
+              data-tab-panel="specifications"
+              tabindex="0"
+            >
+              <table class="specTable">
+                <caption class="sr-only">{{PRODUCT_CODE}} specifications</caption>
+                <tbody>
+                  <!--
+                    Repeat per spec row, always these 13 labels in this order:
+                    Voltage, Amperage, Standard Test To, LOA, Unfilled Weight,
+                    Volume, Housing Material, IP Rating, Ex-Rating,
+                    Cable Outside Diameter Range, Cable Conductor Range,
+                    Contact Configuration, Gland Options
+                    (LV pages with two parts: "Receptacle 5.0KG / Plug 2.6KG")
+                  -->
+                  <tr>
+                    <th class="specLabel" scope="row">{{SPEC_LABEL}}</th>
+                    <td class="specValue">{{SPEC_VALUE}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              class="productPanel"
+              id="productPanel-downloads"
+              role="tabpanel"
+              aria-labelledby="productTab-downloads"
+              data-tab-panel="downloads"
+              tabindex="0"
+              hidden
+            >
+              <ul class="downloadList">
+                <!-- Test report first. With no file yet, link to Contact Us and label it "Test Report (available on request)". -->
+                <li>
+                  <a class="downloadLink" href="{{TEST_REPORT_URL}}" download="{{TEST_REPORT_FILENAME}}">
+                    <span class="downloadName">Test Report</span>
+                    <span class="downloadIcon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4v12M6 10l6 6 6-6M5 20h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+                <!-- Repeat per STEP solid. Omit when the product has none. -->
+                <li>
+                  <a class="downloadLink" href="{{SOLID_URL}}" download="{{SOLID_FILENAME}}">
+                    <span class="downloadName">{{SOLID_LABEL}}</span>
+                    <span class="downloadIcon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4v12M6 10l6 6 6-6M5 20h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div
+              class="productPanel"
+              id="productPanel-features"
+              role="tabpanel"
+              aria-labelledby="productTab-features"
+              data-tab-panel="features"
+              tabindex="0"
+              hidden
+            >
+              <ul class="featureList">
+                <!-- Repeat per feature -->
+                <li>{{FEATURE}}</li>
+              </ul>
+            </div>
+          </div>
+
+          <a class="pillBtn btn-blue productQuote" href="/pages/contact-us/index.html#contactForm">
+            <span class="pillBtnText">Request a Quote</span>
+            <span class="pillBtnArrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div data-include="../../../../components/layout/map/map.html"></div>
+</main>

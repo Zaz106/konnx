@@ -1,0 +1,187 @@
+/* Shared pill CTA
+   Text is optically centered in the full pill; the arrow circle is pinned
+   to the right with a consistent inset. Equal left/right padding (arrow
+   width + breathing room) keeps the label centered at every length.
+   min-width keeps short labels (VIEW MORE, SUBMIT) from looking undersized.
+
+   <a class="pillBtn btn-blue" href="...">
+     <span class="pillBtnText">VIEW MORE</span>
+     <span class="pillBtnArrow" aria-hidden="true">…</span>
+   </a>
+*/
+
+.pillBtn {
+  --pill-pad: 0.35rem;
+  --pill-arrow: 2.5rem;
+  /* Space between label and arrow — needs enough room for long labels
+     (e.g. KONNX PRODUCT RANGE). Short labels still size via min-width. */
+  --pill-gap: 1.5rem;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: 100%;
+  min-width: min(100%, 15.5rem);
+  min-height: calc(var(--pill-arrow) + (var(--pill-pad) * 2));
+  padding-block: var(--pill-pad);
+  /* Equal sides so label sits on the true center of the pill */
+  padding-inline: calc(var(--pill-pad) + var(--pill-arrow) + var(--pill-gap));
+  border: none;
+  border-radius: 9999px;
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition:
+    background-color 0.3s ease-in-out,
+    color 0.3s ease-in-out;
+}
+
+.pillBtnText {
+  display: block;
+  white-space: nowrap;
+  color: inherit;
+  pointer-events: none;
+}
+
+.pillBtnArrow {
+  position: absolute;
+  top: 50%;
+  right: var(--pill-pad);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--pill-arrow);
+  height: var(--pill-arrow);
+  border-radius: 9999px;
+  transform: translateY(-50%);
+  transition:
+    background-color 0.3s ease-in-out,
+    color 0.3s ease-in-out;
+}
+
+.pillBtnArrow svg {
+  display: block;
+  width: 50%;
+  height: 50%;
+}
+
+/* ---- Color variants ---- */
+
+.pillBtn.btn-white {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.pillBtn.btn-white:hover {
+  background-color: #ff6a14;
+  color: #ffffff;
+}
+
+.pillBtn.btn-white .pillBtnArrow {
+  background-color: #263978;
+  color: #ffffff;
+}
+
+.pillBtn.btn-white:hover .pillBtnArrow,
+.pillBtn.btn-white:focus-visible .pillBtnArrow {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.pillBtn.btn-blue {
+  background-color: #263978;
+  color: #ffffff;
+}
+
+.pillBtn.btn-blue:hover {
+  background-color: #ff6a14;
+  color: #ffffff;
+}
+
+.pillBtn.btn-blue .pillBtnArrow {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.pillBtn.btn-blue:hover .pillBtnArrow,
+.pillBtn.btn-blue:focus-visible .pillBtnArrow {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Defeat global a:hover color so label stays on-brand */
+a.pillBtn:hover,
+a.pillBtn:focus-visible {
+  color: inherit;
+}
+
+.pillBtn:focus-visible {
+  outline: 2px solid #ff6a14;
+  outline-offset: 3px;
+}
+
+/* ---- Responsive scale ---- */
+
+@media (max-width: 1600px) {
+  .pillBtn {
+    --pill-pad: 0.35rem;
+    --pill-arrow: 2.375rem;
+    --pill-gap: 1.5rem;
+    font-size: 0.875rem;
+    min-width: min(100%, 15rem);
+  }
+}
+
+@media (max-width: 1024px) {
+  .pillBtn {
+    --pill-pad: 0.3rem;
+    --pill-arrow: 2.25rem;
+    --pill-gap: 1.25rem;
+    font-size: 0.85rem;
+    min-width: min(100%, 14.5rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .pillBtn {
+    --pill-pad: 0.3rem;
+    --pill-arrow: 2.25rem;
+    --pill-gap: 1.25rem;
+    font-size: 0.85rem;
+    min-width: min(100%, 14rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .pillBtn {
+    --pill-pad: 0.28rem;
+    --pill-arrow: 2.125rem;
+    --pill-gap: 1.15rem;
+    font-size: 0.8rem;
+    min-width: min(100%, 13.5rem);
+  }
+}
+
+@media (max-width: 380px) {
+  .pillBtn {
+    --pill-pad: 0.25rem;
+    --pill-arrow: 2rem;
+    --pill-gap: 1rem;
+    font-size: 0.75rem;
+    min-width: min(100%, 12.5rem);
+  }
+}

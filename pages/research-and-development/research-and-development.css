@@ -1,0 +1,994 @@
+/* Research & Development page — hero + intro copied from the LV/HV connector pages.
+   Every value is literal (no CSS custom properties) so this file is fully
+   self-contained — nothing needs to be traced back to global.css.
+   Breakpoints: 1920 / 1600 / 1024 / 768 / 480 / 420 / 380 (rules.txt).
+   Media queries sit directly under the selector they scale — no clamp(). */
+
+.accent {
+  color: #ff6a14;
+}
+
+/* ---- Layout shells ---- */
+.section {
+  width: 100%;
+  padding: 4.5rem 2rem;
+}
+
+@media (max-width: 1600px) {
+  .section {
+    padding: 4rem 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: 3rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2.5rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 2.25rem 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section {
+    padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .section {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ---- Shared pill button chrome: components/ui/cta/cta.css ---- */
+
+/* ---- 1. Hero ---- */
+/* Stack: photo (0) → dark overlay (1) → corner arcs (2) → text/CTA (3) */
+.section.heroSection {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 60vh;
+  padding: 4.5rem 8rem;
+  background-image: url("../../assets/images/general/research and dev hero.webp");
+  background-size: cover;
+  background-position: center;
+  background-color: #ffffff;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+@media (max-width: 1600px) {
+  .section.heroSection {
+    min-height: 58vh;
+    padding: 4rem 5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .section.heroSection {
+    min-height: 55vh;
+    padding: 3.5rem 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section.heroSection {
+    min-height: 52vh;
+    padding: 3rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section.heroSection {
+    min-height: 50vh;
+    padding: 2.5rem 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .section.heroSection {
+    min-height: 48vh;
+    padding: 2.25rem 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .section.heroSection {
+    min-height: 46vh;
+    padding: 2rem 1rem;
+  }
+}
+
+.heroSection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.heroArc {
+  position: absolute;
+  z-index: 2;
+  width: 15rem;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 1600px) {
+  .heroArc {
+    width: 13.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroArc {
+    width: 11.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroArc {
+    width: 9.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroArc {
+    width: 7.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroArc {
+    width: 6.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .heroArc {
+    width: 5.75rem;
+  }
+}
+
+.heroArcTopLeft {
+  top: 0;
+  left: 0;
+  transform: rotate(180deg);
+}
+
+.heroArcBottomRight {
+  bottom: 0;
+  right: 0;
+}
+
+.heroSection .container {
+  position: relative;
+  z-index: 3;
+  max-width: none;
+  margin: 0;
+  width: 100%;
+}
+
+.heroContent {
+  text-align: left;
+}
+
+.heroTitle {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 5.75rem;
+  font-weight: 400;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 2rem;
+  letter-spacing: -0.05em;
+}
+
+@media (max-width: 1600px) {
+  .heroTitle {
+    font-size: 5.125rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .heroTitle {
+    font-size: 4.25rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 3.5rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 3.125rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .heroTitle {
+    font-size: 2.875rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .heroTitle {
+    font-size: 2.5rem;
+    margin: 0 0 1rem;
+  }
+}
+
+/* Hero CTA chrome: components/ui/cta/cta.css (add .heroCta for entrance animation) */
+
+/* ---- 2. Intro text band ---- */
+.introSection {
+  background: #ffffff;
+  text-align: center;
+  padding: 8rem 2rem 9.5rem;
+}
+
+@media (max-width: 1600px) {
+  .introSection {
+    padding: 7rem 2rem 8.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introSection {
+    padding: 6rem 2.5rem 7.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introSection {
+    padding: 5.5rem 2rem 6.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introSection {
+    padding: 5rem 1.25rem 6.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introSection {
+    padding: 4.75rem 1.25rem 6rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introSection {
+    padding: 4.5rem 1.25rem 5.5rem;
+  }
+}
+
+.introContent {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.introLead {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 4.25rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: #000000;
+  margin: 0 0 2rem;
+}
+
+@media (max-width: 1600px) {
+  .introLead {
+    font-size: 3.75rem;
+    margin: 0 0 1.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introLead {
+    font-size: 3.125rem;
+    margin: 0 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introLead {
+    font-size: 2.625rem;
+    margin: 0 0 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introLead {
+    font-size: 2.375rem;
+    margin: 0 0 1.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introLead {
+    font-size: 2.25rem;
+    margin: 0 0 1.15rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introLead {
+    font-size: 2rem;
+    margin: 0 0 1rem;
+  }
+}
+
+.introBody {
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  color: #000000;
+  margin: 0;
+}
+
+@media (max-width: 1600px) {
+  .introBody {
+    font-size: 1.1875rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .introBody {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .introBody {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .introBody {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .introBody {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .introBody {
+    font-size: 0.875rem;
+  }
+}
+
+/* ---- 3. Product innovations timeline ---- */
+.innovationsSection {
+  background: #263978;
+  padding: 7rem 2rem 7.5rem;
+}
+
+@media (max-width: 1600px) {
+  .innovationsSection {
+    padding: 6.25rem 2rem 6.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .innovationsSection {
+    padding: 5.5rem 2.5rem 6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .innovationsSection {
+    padding: 5rem 1.25rem 5.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .innovationsSection {
+    padding: 4.25rem 1.25rem 4.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .innovationsSection {
+    padding: 4rem 1.25rem 4.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .innovationsSection {
+    padding: 3.75rem 1.25rem 4.25rem;
+  }
+}
+
+.innovationsTitle {
+  color: #ffffff;
+  text-align: center;
+  margin: 0 0 4.5rem;
+}
+
+@media (max-width: 1600px) {
+  .innovationsTitle {
+    margin: 0 0 4rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .innovationsTitle {
+    margin: 0 0 3.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .innovationsTitle {
+    margin: 0 0 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .innovationsTitle {
+    margin: 0 0 2.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .innovationsTitle {
+    margin: 0 0 2.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .innovationsTitle {
+    margin: 0 0 2rem;
+  }
+}
+
+.timeline {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0 3.25rem;
+}
+
+@media (max-width: 768px) {
+  .timeline {
+    padding: 0 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline {
+    padding: 0 2.25rem;
+  }
+}
+
+.timelineArrow {
+  position: absolute;
+  top: 11.925rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.timelinePrev {
+  left: 0;
+}
+
+.timelineNext {
+  right: 0;
+}
+
+@media (max-width: 1600px) {
+  .timelineArrow {
+    top: 11.425rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .timelineArrow {
+    top: 11.175rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .timelineArrow {
+    top: 10.925rem;
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timelineArrow {
+    top: 10.325rem;
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.timelineArrow svg {
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+@media (max-width: 768px) {
+  .timelineArrow svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.timelineArrow:hover,
+.timelineArrow:focus-visible {
+  color: #ff6a14;
+}
+
+.timelineArrow:focus-visible {
+  outline: 2px solid #ff6a14;
+  outline-offset: 3px;
+}
+
+.timelineArrow:disabled {
+  opacity: 0.3;
+  color: #ffffff;
+  cursor: default;
+}
+
+.timelineViewport {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.timelineViewport::-webkit-scrollbar {
+  display: none;
+}
+
+.timelineTrack {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 2.5rem;
+  width: max-content;
+  margin: 0;
+  padding: 0 0 0.75rem;
+  list-style: none;
+}
+
+@media (max-width: 1600px) {
+  .timelineTrack {
+    gap: 2.15rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .timelineTrack {
+    gap: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .timelineTrack {
+    gap: 1.35rem;
+  }
+}
+
+.timelineTrack::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 11.925rem;
+  height: 2px;
+  background: #ffffff;
+}
+
+@media (max-width: 1600px) {
+  .timelineTrack::before {
+    top: 11.425rem;
+  }
+
+  .timelineArrow {
+    top: 11.425rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .timelineTrack::before {
+    top: 11.175rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .timelineTrack::before {
+    top: 10.925rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timelineTrack::before {
+    top: 10.325rem;
+  }
+}
+
+.timelineItem {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 16.5rem;
+  width: 16.5rem;
+}
+
+@media (max-width: 1600px) {
+  .timelineItem {
+    flex-basis: 15.25rem;
+    width: 15.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .timelineItem {
+    flex-basis: 14.25rem;
+    width: 14.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .timelineItem {
+    flex-basis: 13.5rem;
+    width: 13.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timelineItem {
+    flex-basis: 12.5rem;
+    width: 12.5rem;
+  }
+}
+
+.timelineCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 8.75rem;
+  padding: 1.15rem 1.1rem;
+  margin: 0 0 2.5rem;
+  background: #ffffff;
+  border-radius: 0.35rem;
+}
+
+@media (max-width: 1600px) {
+  .timelineCard {
+    height: 8.25rem;
+    padding: 1.05rem 1rem;
+    margin: 0 0 2.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .timelineCard {
+    height: 8rem;
+    padding: 1rem 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .timelineCard {
+    height: 7.75rem;
+    padding: 0.9rem 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timelineCard {
+    height: 7.25rem;
+    padding: 0.8rem 0.7rem;
+  }
+}
+
+.timelineCardText {
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: #000000;
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 1600px) {
+  .timelineCardText {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .timelineCardText {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .timelineCardText {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timelineCardText {
+    font-size: 0.8125rem;
+  }
+}
+
+.timelineMarker {
+  position: relative;
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 9999px;
+  background: #ff6a14;
+  box-shadow: 0 0 0 0.35rem #263978;
+}
+
+@media (max-width: 480px) {
+  .timelineMarker {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+}
+
+.timelineMarker::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  transform: translate(-50%, -50%);
+}
+
+@media (max-width: 480px) {
+  .timelineMarker::after {
+    width: 0.45rem;
+    height: 0.45rem;
+  }
+}
+
+.timelineYear {
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 1.5rem 0 0;
+}
+
+@media (max-width: 1600px) {
+  .timelineYear {
+    font-size: 2.05rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .timelineYear {
+    font-size: 1.85rem;
+    margin: 1.35rem 0 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .timelineYear {
+    font-size: 1.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timelineYear {
+    font-size: 1.5rem;
+    margin: 1.15rem 0 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .timelineYear {
+    font-size: 1.35rem;
+  }
+}
+
+/* ---- 4. Safety & Compliance ---- */
+.complianceSection {
+  background: #ffffff;
+  padding: 8rem 2rem 9.5rem;
+}
+
+@media (max-width: 1600px) {
+  .complianceSection {
+    padding: 7rem 2rem 8.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .complianceSection {
+    padding: 6rem 2.5rem 7.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .complianceSection {
+    padding: 5.5rem 2rem 6.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .complianceSection {
+    padding: 5rem 1.25rem 6.25rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .complianceSection {
+    padding: 4.75rem 1.25rem 6rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .complianceSection {
+    padding: 4.5rem 1.25rem 5.5rem;
+  }
+}
+
+.complianceLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6rem;
+  align-items: center;
+  max-width: 75rem;
+  margin: 0 auto;
+}
+
+@media (max-width: 1600px) {
+  .complianceLayout {
+    max-width: 68rem;
+    gap: 6rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .complianceLayout {
+    grid-template-columns: 1fr;
+    max-width: 40rem;
+    gap: 2.5rem;
+    justify-items: center;
+  }
+}
+
+.complianceImage {
+  display: block;
+  width: 100%;
+  max-width: 36rem;
+  height: auto;
+  aspect-ratio: 6 / 5;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 1024px) {
+  .complianceImage {
+    max-width: 100%;
+  }
+}
+
+.complianceCopy {
+  min-width: 0;
+  text-align: center;
+}
+
+.complianceCopy .introBody {
+  margin: 0 0 2rem;
+}
+
+.complianceDownloads {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .complianceDownloads .pillBtnText {
+    white-space: normal;
+  }
+}
+
+/* ---- Motion (hero only) ---- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Arc SVG wipe: reveals right → left in local coords.
+     Top-left is rotated 180°, so the same wipe reads as the
+     continuing half of a circle with the bottom-right arc. */
+  @keyframes heroArcReveal {
+    from {
+      clip-path: inset(0 0 0 100%);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes heroFade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .heroArcTopLeft,
+  .heroArcBottomRight {
+    animation: heroArcReveal 1.8s cubic-bezier(0.45, 0, 0.2, 1) 0.2s both;
+  }
+
+  .heroTitle {
+    animation: heroFade 1.1s ease 0.35s both;
+  }
+
+  .heroCta {
+    animation: heroFade 1.1s ease 0.55s both;
+  }
+}

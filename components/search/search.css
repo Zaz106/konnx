@@ -1,0 +1,408 @@
+/* Site search
+   Desktop: the header search button grows into a pill over the nav, with a
+   results panel underneath. Mobile (≤1024px): the same search lives inside
+   the full-viewport menu.
+   Literal values, no tokens. camelCase classes (rules.txt). */
+
+/* ---- Desktop expanding bar (in the header) ---- */
+
+.headerSearchBar {
+  background: transparent;
+  transition:
+    width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.35s ease-in-out,
+    box-shadow 0.35s ease-in-out;
+}
+
+.headerSearch.is-open .headerSearchBar {
+  background: #ffffff;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.025);
+}
+
+.headerSearchForm {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.headerSearch.is-open .headerSearchForm {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.28s ease-in-out 0.16s;
+}
+
+.headerSearchInput {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.35rem 0 1.25rem;
+  border: 0;
+  background: transparent;
+  color: #000000;
+  font-family: "Calibri", "Carlito", "Segoe UI", sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+
+.headerSearchInput:focus {
+  outline: none;
+}
+
+.headerSearchInput::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.headerSearchInput::-webkit-search-decoration,
+.headerSearchInput::-webkit-search-cancel-button,
+.headerSearchInput::-webkit-search-results-button,
+.headerSearchInput::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+@media (max-width: 1600px) {
+  .headerSearchInput {
+    padding-left: 1.15rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .headerSearchInput {
+    padding-left: 1.05rem;
+  }
+}
+
+/* ---- Desktop results panel ---- */
+
+.headerSearchPanel {
+  position: absolute;
+  top: calc(100% + 0.65rem);
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 2.75rem;
+  max-height: 70vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 1.25rem 1.35rem 0;
+  border-radius: 1rem;
+  background: #ffffff;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-0.4rem);
+  transition:
+    opacity 0.28s ease-in-out,
+    transform 0.28s ease-in-out,
+    visibility 0s linear 0.28s;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  overscroll-behavior: contain;
+}
+
+.headerSearchPanel::-webkit-scrollbar {
+  width: 0.35rem;
+}
+
+.headerSearchPanel::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.headerSearch.is-open .headerSearchPanel:not([hidden]) {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    opacity 0.32s ease-in-out 0.08s,
+    transform 0.32s ease-in-out 0.08s,
+    visibility 0s linear 0s;
+}
+
+@media (max-width: 1600px) {
+  .headerSearchPanel {
+    padding: 1.15rem 1.2rem 0;
+    border-radius: 0.9rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .headerSearchPanel {
+    padding: 1rem 1.05rem 0;
+    border-radius: 0.8rem;
+    max-height: 65vh;
+  }
+}
+
+.searchResultsGroup + .searchResultsGroup {
+  margin-top: 1.35rem;
+}
+
+@media (max-width: 1024px) {
+  .searchResultsGroup + .searchResultsGroup {
+    margin-top: 1.15rem;
+  }
+}
+
+.searchResultsHeading {
+  margin: 0 0 0.85rem;
+  color: rgba(0, 0, 0, 0.45);
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+.headerSearchPanel > .searchResultsHeading {
+  padding-bottom: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .searchResultsHeading {
+    margin: 0 0 0.7rem;
+  }
+}
+
+.searchResultsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem 0.85rem;
+  padding-bottom: 1.25rem;
+}
+
+@media (max-width: 1600px) {
+  .searchResultsGrid {
+    gap: 0.9rem 0.75rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .searchResultsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 0.7rem;
+  }
+}
+
+.searchResultCard,
+.nav a.searchResultCard {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0.55rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 0;
+  border-radius: 0;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  text-transform: none;
+  white-space: normal;
+  letter-spacing: normal;
+  font-size: inherit;
+  font-weight: inherit;
+  box-shadow: none;
+}
+
+.searchResultCard:hover,
+.nav a.searchResultCard:hover {
+  color: inherit;
+}
+
+.searchResultCard:hover .searchResultBody {
+  opacity: 1;
+}
+
+.searchResultCard:hover .searchResultDesc {
+  color: #ff6a14;
+}
+
+.searchResultImage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 1024px) {
+  .searchResultImage {
+    border-radius: 0.65rem;
+  }
+}
+
+.searchResultImage img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.searchResultImage::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 4.25rem;
+  aspect-ratio: 398 / 381;
+  background-image: url("../../assets/images/Corner Arc.svg");
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  background-size: contain;
+  pointer-events: none;
+}
+
+@media (max-width: 1600px) {
+  .searchResultImage::after {
+    width: 3.85rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .searchResultImage::after {
+    width: 3.5rem;
+  }
+}
+
+.searchResultBody {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.05rem;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+  opacity: 0.5;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.searchResultName {
+  display: block;
+  width: 100%;
+  text-align: left;
+  text-transform: none;
+  white-space: normal;
+  font-family: "Archivo", "Arial Narrow", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #000000;
+}
+
+@media (max-width: 1600px) {
+  .searchResultName {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .searchResultName {
+    font-size: 0.85rem;
+  }
+}
+
+.searchResultDesc {
+  display: block;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  text-transform: none;
+  white-space: normal;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #000000;
+  transition: color 0.2s ease-in-out;
+}
+
+@media (max-width: 1024px) {
+  .searchResultDesc {
+    font-size: 0.75rem;
+  }
+}
+
+.headerSearchPanel::after {
+  content: "";
+  position: sticky;
+  bottom: 0;
+  display: block;
+  height: 2.75rem;
+  margin-top: -2.75rem;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+  z-index: 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headerSearchBar,
+  .headerSearchForm,
+  .headerSearchPanel,
+  .searchResultBody,
+  .searchResultDesc {
+    transition: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .nav .headerSearchForm,
+  .headerSearchForm {
+    opacity: 1;
+    pointer-events: auto;
+    overflow: visible;
+  }
+
+  .headerSearch.is-open .searchToggleSearch {
+    opacity: 1;
+  }
+
+  .headerSearch.is-open .searchToggleClose {
+    opacity: 0;
+  }
+
+  .headerSearchPanel {
+    position: relative;
+    top: 0.85rem;
+    right: auto;
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .headerSearchPanel:not([hidden]),
+  .headerSearch.is-open .headerSearchPanel:not([hidden]) {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .headerSearchPanel::after {
+    display: none;
+  }
+
+  .searchResultsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 0.5rem;
+  }
+}
