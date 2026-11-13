@@ -4,7 +4,9 @@
    GLB + meshopt decoder are preloaded there, so everything downloads in
    parallel with the HTML. This file only configures the element once the
    library has defined it. The GLB `src` is set here, after the decoder is
-   registered, never in markup. Rendering is on demand (no auto-rotate). */
+   registered, never in markup. Rendering is on demand (no auto-rotate).
+   Also wires the control column: zoom, reset, hotspot toggle, and the AR
+   button (touch devices that support AR only). */
 (function () {
   var root = document.querySelector("[data-product-viewer]");
   if (!root) return;
@@ -117,6 +119,59 @@
     });
   }
 
+  // Hotspot toggle: dots + labels are hidden by default. The button is
+  // removed when the page has no hotspots.
+  function setupHotspots() {
+    var button = root.querySelector("[data-viewer-hotspots]");
+    if (!button) return;
+    if (!viewer.querySelector('[slot^="hotspot-"]')) {
+      button.hidden = true;
+      return;
+    }
+    button.addEventListener("click", function () {
+      var on = !root.classList.contains("is-hotspotsOn");
+      root.classList.toggle("is-hotspotsOn", on);
+      button.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+
+  // "View in your space": model-viewer does the AR work (WebXR on Android,
+  // Quick Look on iOS, with the USDZ built in the browser). The button stays
+  // hidden unless the library reports the device can really start a session
+  // AND the primary input is touch, so it never shows on desktop. The session
+  // only starts from this tap (a user gesture), the browser or OS asks for
+  // camera permission itself, and nothing leaves the site: same-origin model,
+  // no Scene Viewer / Google hand-off (it cannot read meshopt GLBs anyway).
+  function setupAr() {
+    var button = root.querySelector("[data-viewer-ar]");
+    if (!button) return;
+
+    var touchFirst = window.matchMedia("(hover: none) and (pointer: coarse)");
+    var attempts = 0;
+
+    function check() {
+      if (viewer.canActivateAR && touchFirst.matches) {
+        button.hidden = false;
+        return;
+      }
+      // model-viewer works out AR support asynchronously after load.
+      attempts += 1;
+      if (attempts < 20) window.setTimeout(check, 250);
+    }
+
+    button.addEventListener("click", function () {
+      if (!viewer.canActivateAR) return;
+      var started = viewer.activateAR();
+      if (started && typeof started.catch === "function") {
+        started.catch(function () {
+          // Cancelled or refused by the visitor / device: nothing to recover.
+        });
+      }
+    });
+
+    if (touchFirst.matches) viewer.addEventListener("load", check, { once: true });
+  }
+
   function bind() {
     var initialOrbit = viewer.getAttribute("camera-orbit") || "auto auto auto";
     var initialTarget = viewer.getAttribute("camera-target") || "auto auto auto";
@@ -159,6 +214,8 @@
 
     guardWheel();
     trackHintHover();
+    setupHotspots();
+    setupAr();
     enableHotspotPicker();
 
     // Decoder must be registered before `src` is set (meshopt-compressed GLB).

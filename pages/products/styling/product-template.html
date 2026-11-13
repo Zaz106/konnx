@@ -27,11 +27,26 @@
 
     .productViewer[data-product-viewer][data-model-src]
       model-viewer.productViewerModel   camera-orbit / camera-target set per
-                                        product, <div slot="progress-bar"> empty
+                                        product, <div slot="progress-bar"> empty,
+                                        ar ar-modes="webxr quick-look"
+                                        ar-scale="fixed" ar-placement="floor",
+                                        <span slot="ar-button" hidden>
         button.productViewerHotspot[slot="hotspot-*"][data-position][data-normal]
+          span.productViewerHotspotLabel   (+ productViewerHotspotLeft / Up to
+                                            move the label off a busy area)
       img.productViewerFallback[hidden] shown only if WebGL / the model fails
       .productViewerRotate              glass hint, hides on first touch
-      .productViewerControls            zoom in / out / reset, show on first touch
+      .productViewerControls            zoom in / out / reset, hotspot toggle
+                                        [data-viewer-hotspots] (hidden by
+                                        default, removed if no hotspots) and AR
+                                        [data-viewer-ar][hidden] (revealed by
+                                        JS on touch devices that support AR).
+                                        Shown on first touch, or at once on
+                                        touch screens.
+
+  AR: never add "scene-viewer" to ar-modes (Google's viewer cannot read
+  meshopt GLBs and needs the file handed to a Google app). Keep the model
+  same-origin; no ios-src needed, the USDZ is built in the browser.
 
   Page head additions:
     <link rel="preload" href="/assets/models/{{CODE}}/{{MODEL}}.glb" as="fetch" crossorigin />
@@ -52,8 +67,8 @@
   HOTSPOTS
   Open the page with ?pickHotspot, click the model, and copy the logged
   data-position / data-normal pair into a new <button slot="hotspot-name">.
-  Dots only, no visible labels. Give each button an aria-label taken from the
-  product's own copy (features / specifications).
+  Hidden by default; the toggle button shows dots and labels together. Label
+  text and aria-label come from the product's own copy (features / specs).
 -->
 <main id="main">
   <section class="section productSection" aria-label="{{PRODUCT_CODE}} product overview">

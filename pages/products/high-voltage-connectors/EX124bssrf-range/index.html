@@ -143,8 +143,42 @@
                   camera-target="0.011m 0.021m 0.121m"
                   min-camera-orbit="auto 10deg 35%"
                   max-camera-orbit="auto 170deg 150%"
+                  ar
+                  ar-modes="webxr quick-look"
+                  ar-scale="fixed"
+                  ar-placement="floor"
                 >
                   <div slot="progress-bar"></div>
+                  <!-- Replaces model-viewer's own AR pill; the AR button lives in .productViewerControls. -->
+                  <span slot="ar-button" hidden></span>
+                  <!-- Hotspots: hidden until the visitor turns them on. Coordinates: product-viewer.js (?pickHotspot). -->
+                  <button
+                    class="productViewerHotspot"
+                    slot="hotspot-flange"
+                    aria-label="Replaceable flange"
+                    data-position="0.0619m 0.0063m -0.1071m"
+                    data-normal="0m 0m -1m"
+                  >
+                    <span class="productViewerHotspotLabel">Replaceable flange</span>
+                  </button>
+                  <button
+                    class="productViewerHotspot productViewerHotspotLeft"
+                    slot="hotspot-bolts"
+                    aria-label="6-bolt closure"
+                    data-position="-0.0810m 0.0714m 0.0994m"
+                    data-normal="0m 0m -1m"
+                  >
+                    <span class="productViewerHotspotLabel">6-bolt closure</span>
+                  </button>
+                  <button
+                    class="productViewerHotspot productViewerHotspotUp"
+                    slot="hotspot-body"
+                    aria-label="Stainless steel body"
+                    data-position="-0.0712m 0.0518m 0.2594m"
+                    data-normal="-0.815m 0.58m 0m"
+                  >
+                    <span class="productViewerHotspotLabel">Stainless steel body</span>
+                  </button>
                 </model-viewer>
                 <img
                   class="productViewerFallback"
@@ -177,6 +211,17 @@
                   <button class="productViewerControl" type="button" aria-label="Reset 3D view" data-viewer-reset>
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                       <path d="M4 12a8 8 0 1 0 2.35-5.65M4 4v4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </button>
+                  <button class="productViewerControl" type="button" aria-label="Product highlights" aria-pressed="false" data-viewer-hotspots>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M12 21s-6-5.2-6-10a6 6 0 1 1 12 0c0 4.8-6 10-6 10z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                      <circle cx="12" cy="11" r="2.2" fill="currentColor" />
+                    </svg>
+                  </button>
+                  <button class="productViewerControl productViewerControlAr" type="button" aria-label="View in your space (augmented reality)" data-viewer-ar hidden>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                   </button>
                 </div>
