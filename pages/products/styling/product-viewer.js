@@ -24,7 +24,7 @@
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   var LOAD_TIMEOUT_MS = 20000;
   var COMPACT_RADIUS = "82%";
-  var DESKTOP_RADIUS = "125%"; // one zoom step (1 / 0.8) out from the markup's 100%
+  var DESKTOP_RADIUS = "112%"; // halfway between the markup's 100% and one full zoom step (125%)
   var loadTimer = null;
 
   // Static image (kept hidden, and never downloaded) only if 3D cannot run.
@@ -212,7 +212,7 @@
     var initialTarget = viewer.getAttribute("camera-target") || "auto auto auto";
 
     // Small screens give the model less room, so start a little closer in;
-    // desktop has plenty, so it starts one zoom step further out. The reset
+    // desktop has plenty, so it starts a little further out. The reset
     // button returns to the same view.
     var radius = null;
     if (window.matchMedia("(max-width: 768px)").matches) {
