@@ -132,8 +132,8 @@
   pointer-events: none;
 }
 
-/* Hero image background behind overlay */
-.heroImage {
+/* Hero video background behind overlay */
+.heroVideo {
   position: absolute;
   inset: 0;
   z-index: 0;

@@ -116,8 +116,8 @@
     </noscript>
     <link
       rel="preload"
-      as="image"
-      href="/assets/images/general/home-hero.webp"
+      as="video"
+      href="/assets/images/general/Temp-HeroVideo.mp4"
       fetchpriority="high"
     />
     <link rel="stylesheet" href="/assets/css/global.css" />
@@ -131,15 +131,20 @@
 
     <main id="main">
       <section class="section heroSection">
-        <img
-          class="heroImage"
-          src="/assets/images/general/home-hero.webp"
-          alt=""
-          width="1920"
-          height="1080"
-          fetchpriority="high"
-          decoding="async"
-        />
+        <video
+          class="heroVideo"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          aria-hidden="true"
+        >
+          <source
+            src="/assets/images/general/Temp-HeroVideo.mp4"
+            type="video/mp4"
+          />
+        </video>
         <div class="heroInner">
           <div class="heroContentRow">
             <h1 class="heroTitle">

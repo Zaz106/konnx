@@ -5,6 +5,7 @@
 (function () {
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
+  initHeroVideo();
   initProductsAnchorScroll();
   initHomeReveals();
 
@@ -32,6 +33,30 @@
       productCards.forEach(function (card) {
         arcObserver.observe(card);
       });
+    }
+  }
+
+  /* Hero background video — pause when the user prefers reduced motion */
+  function initHeroVideo() {
+    var video = document.querySelector(".heroSection .heroVideo");
+    if (!video) return;
+
+    function syncMotion() {
+      if (reduceMotion.matches) {
+        video.pause();
+        return;
+      }
+      var play = video.play();
+      if (play && typeof play.catch === "function") {
+        play.catch(function () {});
+      }
+    }
+
+    syncMotion();
+    if (typeof reduceMotion.addEventListener === "function") {
+      reduceMotion.addEventListener("change", syncMotion);
+    } else if (typeof reduceMotion.addListener === "function") {
+      reduceMotion.addListener(syncMotion);
     }
   }
 

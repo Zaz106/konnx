@@ -63,12 +63,29 @@
     cd tools/model-prep && npm install
     node optimize-model.mjs <cad-export.glb> ../../assets/models/{{CODE}}/{{MODEL}}.glb
   Keep POSITION unquantised: model-viewer mis-measures quantised bounds.
+  The script bakes the model into the centre of the file (footprint on the
+  origin, floor at y=0) so AR placement and rotation stay centred on the
+  screen. It prints an "Offset"; add it to camera-target and to every hotspot
+  data-position when you swap a model in. Defaults are tuned for phones (opaque
+  glass, no clearcoat, single-sided faces); --keep-glass, --keep-clearcoat,
+  --double-sided and --no-center restore the originals.
+  Phones: vendor/model-viewer.min.js is patched to cap the render pixel ratio
+  at 2 (two Math.min(window.devicePixelRatio,2) spots). Re-apply after any
+  upgrade of that file.
 
   HOTSPOTS
   Open the page with ?pickHotspot, click the model, and copy the logged
   data-position / data-normal pair into a new <button slot="hotspot-name">.
   Hidden by default; the toggle button shows dots and labels together. Label
   text and aria-label come from the product's own copy (features / specs).
+  product-viewer.js removes the buttons from the viewer while they are off
+  (model-viewer ray-casts every hotspot each frame) and re-adds them on toggle.
+
+  RESPONSIVE
+  The block of overrides at the end of product-range.css tunes the two-column
+  layout at 1440 / 1366 / 1280 / 1180 / 1100 / 1060 and scales the section up
+  on 2200 / 2800 / 3400px+ screens. It sits at the end on purpose so it beats
+  the base rules; keep new width tuning there.
 -->
 <main id="main">
   <section class="section productSection" aria-label="{{PRODUCT_CODE}} product overview">

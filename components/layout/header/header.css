@@ -106,15 +106,22 @@
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: -0.03em;
+  line-height: 1;
   text-transform: uppercase;
   text-decoration: none;
   color: #263978;
   background: transparent;
   border: 0;
   padding: 0;
+  margin: 0;
   cursor: pointer;
-  margin-top: 0.25rem;
   transition: color 0.35s ease-in-out;
+}
+
+/* Optical align with the search circle — same nudge on every label (not the wrap) */
+.nav > a,
+.navDropdownToggle {
+  transform: translateY(0.25rem);
 }
 
 .nav a:hover,
@@ -124,17 +131,20 @@
 
 .navDropdown {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .navDropdownCaret {
   width: 0.85em;
   height: 0.85em;
   flex-shrink: 0;
+  transform: translateY(-0.12em);
   transition: transform 0.25s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .navDropdown.is-open .navDropdownCaret {
-  transform: rotate(180deg);
+  transform: translateY(-0.12em) rotate(180deg);
 }
 
 .navDropdownMenu {
@@ -143,7 +153,7 @@
   position: absolute;
   top: 100%;
   left: 0;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   min-width: 16rem;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -157,10 +167,10 @@
 .navDropdownMenu::before {
   content: "";
   position: absolute;
-  top: -1rem;
+  top: -1.25rem;
   left: 0;
   right: 0;
-  height: 1rem;
+  height: 1.25rem;
 }
 
 .navDropdown.is-open .navDropdownMenu {
@@ -580,6 +590,7 @@
     letter-spacing: -0.03em;
     text-transform: none;
     color: #000000;
+    transform: none;
     transition: none;
   }
 

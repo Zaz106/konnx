@@ -34,6 +34,12 @@
     if (fallback) fallback.hidden = false;
   }
 
+  // Undo fail() if the model turns out to render after all.
+  function recover() {
+    root.classList.remove("is-failed");
+    if (fallback) fallback.hidden = true;
+  }
+
   function hasWebGL() {
     try {
       var canvas = document.createElement("canvas");
@@ -51,8 +57,20 @@
     return;
   }
 
+  // First touch reveals the controls and retires the rotate hint. Once done,
+  // the listeners that report it are removed so dragging costs nothing extra.
+  var touched = false;
+
+  function onUserCamera(event) {
+    if (event.detail && event.detail.source === "user-interaction") markTouched();
+  }
+
   function markTouched() {
+    if (touched) return;
+    touched = true;
     root.classList.add("is-touched");
+    viewer.removeEventListener("camera-change", onUserCamera);
+    viewer.removeEventListener("pointerdown", markTouched);
   }
 
   // Own zoom step (model-viewer's zoom() is lopsided in and out). The orbit
@@ -92,6 +110,9 @@
   function trackHintHover() {
     if (!rotateHint) return;
     root.addEventListener("pointermove", function (event) {
+      // Mouse only, and only while the hint is still showing: touch drags
+      // fire this constantly and measuring layout each time is wasted work.
+      if (touched || (event.pointerType && event.pointerType !== "mouse")) return;
       var rect = rotateHint.getBoundingClientRect();
       var dx = event.clientX - (rect.left + rect.width / 2);
       var dy = event.clientY - (rect.top + rect.height / 2);
@@ -121,18 +142,47 @@
   }
 
   // Hotspot toggle: dots + labels are hidden by default. The button is
-  // removed when the page has no hotspots.
+  // removed when the page has no hotspots. model-viewer ray-casts every
+  // hotspot against the whole mesh on every frame (to fade the ones facing
+  // away), so while they are off the buttons are taken out of the element
+  // altogether and cost nothing; they go back in when the toggle is on.
   function setupHotspots() {
     var button = root.querySelector("[data-viewer-hotspots]");
     if (!button) return;
-    if (!viewer.querySelector('[slot^="hotspot-"]')) {
+    var hotspots = Array.prototype.slice.call(
+      viewer.querySelectorAll('[slot^="hotspot-"]')
+    );
+    if (!hotspots.length) {
       button.hidden = true;
       return;
     }
+
+    var detachTimer = null;
+
+    function detach() {
+      hotspots.forEach(function (hotspot) {
+        if (hotspot.parentNode === viewer) viewer.removeChild(hotspot);
+      });
+    }
+
+    detach();
+
     button.addEventListener("click", function () {
       var on = !root.classList.contains("is-hotspotsOn");
-      root.classList.toggle("is-hotspotsOn", on);
       button.setAttribute("aria-pressed", on ? "true" : "false");
+      window.clearTimeout(detachTimer);
+      if (on) {
+        hotspots.forEach(function (hotspot) {
+          if (!hotspot.parentNode) viewer.appendChild(hotspot);
+        });
+        // Next frame, so the fade-in has a hidden state to start from.
+        window.requestAnimationFrame(function () {
+          root.classList.add("is-hotspotsOn");
+        });
+      } else {
+        root.classList.remove("is-hotspotsOn");
+        detachTimer = window.setTimeout(detach, 350); // after the fade-out
+      }
     });
   }
 
@@ -232,15 +282,36 @@
     viewer.addEventListener("load", function () {
       if (loadTimer) window.clearTimeout(loadTimer);
       root.classList.add("is-loaded");
+      // A late load clears any earlier failure (the poster must not linger).
+      if (root.classList.contains("is-failed")) recover();
     });
-    viewer.addEventListener("error", fail);
 
-    viewer.addEventListener("camera-change", function (event) {
-      if (event.detail && event.detail.source === "user-interaction") {
-        markTouched();
-      }
+    // Only a model that never rendered is a failure. Once it is on screen,
+    // errors are transient: a phone drops the WebGL context when you leave
+    // the browser and gives it back on return, and model-viewer rebuilds the
+    // scene itself. Showing the poster then is what made it flash back.
+    viewer.addEventListener("error", function (event) {
+      var type = event.detail && event.detail.type;
+      if (type === "webglcontextlost") return;
+      if (root.classList.contains("is-loaded")) return;
+      fail();
     });
+
+    viewer.addEventListener("camera-change", onUserCamera);
     viewer.addEventListener("pointerdown", markTouched, { passive: true });
+
+    // Coming back to the tab or the page (bfcache): make sure a frame is
+    // drawn, in case the browser discarded the canvas while away.
+    function redraw() {
+      if (!root.classList.contains("is-loaded")) return;
+      viewer.jumpCameraToGoal();
+    }
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) redraw();
+    });
+    window.addEventListener("pageshow", function (event) {
+      if (event.persisted) redraw();
+    });
 
     if (controls) {
       controls.addEventListener("click", function (event) {
@@ -266,6 +337,19 @@
     viewer.src = modelSrc;
   }
 
-  loadTimer = window.setTimeout(fail, LOAD_TIMEOUT_MS);
+  // Slow connection guard. Background tabs throttle everything, so the clock
+  // only counts while the page is visible.
+  function armLoadTimer() {
+    loadTimer = window.setTimeout(function () {
+      if (root.classList.contains("is-loaded")) return;
+      if (document.hidden) {
+        armLoadTimer();
+        return;
+      }
+      fail();
+    }, LOAD_TIMEOUT_MS);
+  }
+
+  armLoadTimer();
   customElements.whenDefined("model-viewer").then(bind);
 })();
