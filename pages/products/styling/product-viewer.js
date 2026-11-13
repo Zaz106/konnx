@@ -24,6 +24,7 @@
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   var LOAD_TIMEOUT_MS = 20000;
   var COMPACT_RADIUS = "82%";
+  var DESKTOP_RADIUS = "125%"; // one zoom step (1 / 0.8) out from the markup's 100%
   var loadTimer = null;
 
   // Static image (kept hidden, and never downloaded) only if 3D cannot run.
@@ -159,14 +160,48 @@
       if (attempts < 20) window.setTimeout(check, 250);
     }
 
-    button.addEventListener("click", function () {
-      if (!viewer.canActivateAR) return;
-      var started = viewer.activateAR();
-      if (started && typeof started.catch === "function") {
-        started.catch(function () {
-          // Cancelled or refused by the visitor / device: nothing to recover.
-        });
+    // In AR the model is placed with its +z end towards the visitor, which
+    // shows this long coupler end-on. A 90 degree yaw (orientation is
+    // "roll pitch yaw") turns it side-on so the whole body is visible. It is
+    // applied only for the AR launch and put back afterwards, so the on-page
+    // viewer is untouched. WebXR keeps the yaw for the session (model-viewer
+    // re-measures on change); Quick Look's USDZ is built from the model as
+    // it is at launch.
+    var AR_ORIENTATION = "0deg 0deg 90deg";
+    var pageOrientation = null;
+
+    function restoreOrientation() {
+      if (pageOrientation === null) return;
+      viewer.orientation = pageOrientation;
+      pageOrientation = null;
+    }
+
+    viewer.addEventListener("ar-status", function (event) {
+      var status = event.detail && event.detail.status;
+      if (status === "not-presenting" || status === "failed") {
+        restoreOrientation();
       }
+    });
+
+    button.addEventListener("click", function () {
+      if (!viewer.canActivateAR || pageOrientation !== null) return;
+      pageOrientation = viewer.orientation || "0deg 0deg 0deg";
+      viewer.orientation = AR_ORIENTATION;
+
+      viewer.updateComplete
+        .then(function () {
+          return viewer.activateAR();
+        })
+        .then(function () {
+          // Quick Look never reports a session, and its file is already built
+          // by now. Give WebXR time to flag its session before deciding.
+          window.setTimeout(function () {
+            if (viewer.getAttribute("ar-status") !== "session-started") {
+              restoreOrientation();
+            }
+          }, 1500);
+        })
+        .catch(restoreOrientation);
     });
 
     if (touchFirst.matches) viewer.addEventListener("load", check, { once: true });
@@ -176,11 +211,19 @@
     var initialOrbit = viewer.getAttribute("camera-orbit") || "auto auto auto";
     var initialTarget = viewer.getAttribute("camera-target") || "auto auto auto";
 
-    // Small screens give the model less room, so start a little closer in.
+    // Small screens give the model less room, so start a little closer in;
+    // desktop has plenty, so it starts one zoom step further out. The reset
+    // button returns to the same view.
+    var radius = null;
     if (window.matchMedia("(max-width: 768px)").matches) {
+      radius = COMPACT_RADIUS;
+    } else if (window.matchMedia("(min-width: 1025px)").matches) {
+      radius = DESKTOP_RADIUS;
+    }
+    if (radius) {
       var parts = initialOrbit.split(" ");
       if (parts.length === 3) {
-        parts[2] = COMPACT_RADIUS;
+        parts[2] = radius;
         initialOrbit = parts.join(" ");
         viewer.cameraOrbit = initialOrbit;
       }

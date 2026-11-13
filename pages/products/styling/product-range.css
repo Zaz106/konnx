@@ -612,15 +612,19 @@ body {
   display: none;
 }
 
-/* Hotspot toggle: orange when on, matching the dots. */
+/* Hotspot toggle: brand navy when on. */
 .productViewerControl[aria-pressed="true"] {
-  background-color: #ff6a14;
+  background-color: #263978;
   color: #ffffff;
 }
 
 .productViewerControl[aria-pressed="true"]:hover,
 .productViewerControl[aria-pressed="true"]:focus-visible {
-  background-color: #e85d0c;
+  background-color: #1c2b5e;
+}
+
+.productViewerControl[aria-pressed="true"]:focus-visible {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #263978;
 }
 
 /* AR: the one primary action in the column, so it is solid navy. */
@@ -963,7 +967,7 @@ body {
 
 @media (max-width: 768px) {
   .productTabList {
-    gap: 1.75rem;
+    gap: 1.25rem;
   }
 }
 
@@ -982,7 +986,7 @@ body {
   background: none;
   color: rgba(0, 0, 0, 0.5);
   font-family: "Archivo", "Arial Narrow", sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.3;
@@ -993,15 +997,9 @@ body {
   transition: color 0.25s ease-in-out;
 }
 
-@media (max-width: 1600px) {
-  .productTab {
-    font-size: 1.125rem;
-  }
-}
-
 @media (max-width: 480px) {
   .productTab {
-    font-size: 1.025rem;
+    font-size: 1rem;
     padding: 0.85rem 0;
   }
 }
@@ -1014,7 +1012,7 @@ body {
 
 @media (max-width: 380px) {
   .productTab {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 }
 
