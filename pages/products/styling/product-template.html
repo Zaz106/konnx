@@ -86,6 +86,11 @@
   layout at 1440 / 1366 / 1280 / 1180 / 1100 / 1060 and scales the section up
   on 2200 / 2800 / 3400px+ screens. It sits at the end on purpose so it beats
   the base rules; keep new width tuning there.
+  3D framing: product-viewer.js starts the camera at 82% / 100% / 112% of the
+  model's fit distance by screen size, then pulls it back if the box is too
+  narrow or short for the model to stay inside it at any angle (FIT = 0.88 of
+  the box, worked out from the model's bounding box). It re-fits on resize and
+  rotation, never zooms in, and the reset button returns to the fitted view.
 -->
 <main id="main">
   <section class="section productSection" aria-label="{{PRODUCT_CODE}} product overview">

@@ -391,42 +391,42 @@
 
 .introContent {
   max-width: 1100px;
-  margin: 2rem auto 0;
+  margin: 2rem auto;
 }
 
 @media (max-width: 1600px) {
   .introContent {
-    margin: 3rem auto 0;
+    margin: 3rem auto;
   }
 }
 
 @media (max-width: 1024px) {
   .introContent {
-    margin: 2.75rem auto 0;
+    margin: 2.75rem auto;
   }
 }
 
 @media (max-width: 768px) {
   .introContent {
-    margin: 2.5rem auto 0;
+    margin: 2.5rem auto;
   }
 }
 
 @media (max-width: 480px) {
   .introContent {
-    margin: 2.25rem auto 0;
+    margin: 2.25rem auto;
   }
 }
 
 @media (max-width: 420px) {
   .introContent {
-    margin: 2rem auto 0;
+    margin: 2rem auto;
   }
 }
 
 @media (max-width: 380px) {
   .introContent {
-    margin: 1.75rem auto 0;
+    margin: 1.75rem auto;
   }
 }
 
@@ -1310,9 +1310,10 @@
   height: calc(var(--safetyIconD) * 1.326);
 }
 
+/* Safety Icon 4.svg — 474×760, circle diameter 473.336 */
 .safetyIcon:nth-child(4) {
-  width: var(--safetyIconD);
-  height: var(--safetyIconD);
+  width: calc(var(--safetyIconD) * 1.0014);
+  height: calc(var(--safetyIconD) * 1.6056);
 }
 
 /* ============================================================

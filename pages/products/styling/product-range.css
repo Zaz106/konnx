@@ -151,9 +151,10 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Half of .productContent padding-left, so the media sits closer to the
-     centre divider than the copy does (deliberate). */
-  padding-right: 1.5rem;
+  /* No right padding: the viewer / gallery reaches towards the centre divider
+     (see the end of this file for how far, per width) so the model does not
+     sit far from it. The copy keeps its own left padding. */
+  padding-right: 0;
 }
 
 /* Centre divider. Both columns are equal width, so the middle of the gap is
@@ -175,7 +176,6 @@ body {
   .productMedia {
     top: 8.5rem;
     height: calc(100vh - 17rem);
-    padding-right: 1.25rem;
   }
 
   .productMedia::after {
@@ -1422,10 +1422,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
     gap: 3.5rem;
   }
 
-  .productMedia {
-    padding-right: 1.25rem;
-  }
-
   .productMedia::after {
     right: -1.75rem;
   }
@@ -1452,10 +1448,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
 
   .productLayout {
     gap: 3.5rem;
-  }
-
-  .productMedia {
-    padding-right: 1.25rem;
   }
 
   .productMedia::after {
@@ -1486,10 +1478,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
     gap: 3.5rem;
   }
 
-  .productMedia {
-    padding-right: 1.25rem;
-  }
-
   .productMedia::after {
     right: -1.75rem;
   }
@@ -1518,10 +1506,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
     gap: 3rem;
   }
 
-  .productMedia {
-    padding-right: 1rem;
-  }
-
   .productMedia::after {
     right: -1.5rem;
   }
@@ -1548,10 +1532,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
 
   .productLayout {
     gap: 3rem;
-  }
-
-  .productMedia {
-    padding-right: 1rem;
   }
 
   .productMedia::after {
@@ -1588,10 +1568,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
 
   .productLayout {
     gap: 3rem;
-  }
-
-  .productMedia {
-    padding-right: 1rem;
   }
 
   .productMedia::after {
@@ -1637,10 +1613,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
   .productViewer,
   .productGallery {
     max-height: 65rem;
-  }
-
-  .productMedia {
-    padding-right: 1.875rem;
   }
 
   .productMedia::after {
@@ -1791,10 +1763,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
     max-height: 78rem;
   }
 
-  .productMedia {
-    padding-right: 2.25rem;
-  }
-
   .productMedia::after {
     right: -3.75rem;
   }
@@ -1943,10 +1911,6 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
     max-height: 98.8rem;
   }
 
-  .productMedia {
-    padding-right: 2.85rem;
-  }
-
   .productMedia::after {
     right: -4.75rem;
   }
@@ -2073,5 +2037,46 @@ body[data-header-pinned] .mapSection .container > .pillBtn {
 
   .productQuote {
     margin-top: 5.225rem;
+  }
+}
+
+/* ==========================================================================
+   Side-by-side layout only (above 1024px): let the model / gallery reach
+   across towards the centre divider, so it does not feel far to the left
+   and cut off from the line. It grows into the gap by a fixed amount per
+   width and leaves a clear margin to the divider.
+   ========================================================================== */
+@media (min-width: 1025px) {
+  .productMedia > .productViewer,
+  .productMedia > .productGallery {
+    width: calc(100% + 0.6rem);
+  }
+}
+
+@media (min-width: 1601px) {
+  .productMedia > .productViewer,
+  .productMedia > .productGallery {
+    width: calc(100% + 1rem);
+  }
+}
+
+@media (min-width: 2200px) {
+  .productMedia > .productViewer,
+  .productMedia > .productGallery {
+    width: calc(100% + 1.25rem);
+  }
+}
+
+@media (min-width: 2800px) {
+  .productMedia > .productViewer,
+  .productMedia > .productGallery {
+    width: calc(100% + 1.5rem);
+  }
+}
+
+@media (min-width: 3400px) {
+  .productMedia > .productViewer,
+  .productMedia > .productGallery {
+    width: calc(100% + 1.9rem);
   }
 }

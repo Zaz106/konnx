@@ -1,4 +1,5 @@
-<!-- → WordPress: get_template_part('template-parts/layout/map') -->
+<!-- → WordPress: get_template_part('template-parts/layout/map')
+     Ends with </body> sentinel for Live Server — stripped by includes.js. -->
 <section class="section mapSection">
   <div class="container">
     <h2 class="mapHeading">
@@ -23,67 +24,195 @@
       </aside>
     </div>
 
+    <p class="mapHint">
+      Tap a region on the map or choose one below for local sales contacts.
+    </p>
+
     <div class="mapLocations" aria-label="Sales enquiries by region">
-      <article class="mapLocation">
-        <p class="mapCardRegion">Africa</p>
-        <p class="mapCardSubhead">Sales Enquiries</p>
-        <p class="mapCardLine">
-          Tel:
-          <a href="tel:+27114962431">+27 11 496 2431</a>
-        </p>
-        <p class="mapCardLine">
-          Email:
-          <a href="mailto:sales@konnx.co.za">sales@konnx.co.za</a>
-        </p>
-      </article>
-      <article class="mapLocation">
-        <p class="mapCardRegion">UK &amp; Europe</p>
-        <p class="mapCardSubhead">Sales Enquiries</p>
-        <p class="mapCardLine">
-          Tel:
-          <a href="tel:+447432217680">+44 743 221 7680</a>
-        </p>
-        <p class="mapCardLine">
-          Email:
-          <a href="mailto:sales@konnx.co.uk">sales@konnx.co.uk</a>
-        </p>
-      </article>
-      <article class="mapLocation">
-        <p class="mapCardRegion">North America</p>
-        <p class="mapCardSubhead">Sales Enquiries</p>
-        <p class="mapCardLine">
-          Tel:
-          <a href="tel:+17206104932">+1 720 610 4932</a>
-        </p>
-        <p class="mapCardLine">
-          Email:
-          <a href="mailto:sales@konnx.net">sales@konnx.net</a>
-        </p>
-      </article>
-      <article class="mapLocation">
-        <p class="mapCardRegion">South America</p>
-        <p class="mapCardSubhead">Sales Enquiries</p>
-        <p class="mapCardLine">
-          Tel:
-          <a href="tel:+51998881503">+51 998 881 503</a>
-        </p>
-        <p class="mapCardLine">
-          Email:
-          <a href="mailto:sergio.rodriguez@konnx.net">sergio.rodriguez@konnx.net</a>
-        </p>
-      </article>
-      <article class="mapLocation">
-        <p class="mapCardRegion">Australia &amp; Asia</p>
-        <p class="mapCardSubhead">Sales Enquiries</p>
-        <p class="mapCardLine">
-          Tel:
-          <a href="tel:+61749784000">+61 7 4978 4000</a>
-        </p>
-        <p class="mapCardLine">
-          Email:
-          <a href="mailto:sales@ausproof.com.au">sales@ausproof.com.au</a>
-        </p>
-      </article>
+      <div class="mapLocation" data-map-region="africa">
+        <h3>
+          <button
+            class="mapLocationTrigger"
+            id="mapLocationTrigger-africa"
+            type="button"
+            aria-expanded="true"
+            aria-controls="mapLocationPanel-africa"
+          >
+            <span class="mapLocationName">Africa</span>
+            <span class="mapLocationIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </h3>
+        <div
+          class="mapLocationPanel"
+          id="mapLocationPanel-africa"
+          role="region"
+          aria-labelledby="mapLocationTrigger-africa"
+        >
+          <div class="mapLocationPanelInner">
+            <div class="mapLocationDetails">
+              <p class="mapCardSubhead">Sales Enquiries</p>
+              <p class="mapCardLine">
+                Tel: <a href="tel:+27114962431">+27 11 496 2431</a>
+              </p>
+              <p class="mapCardLine">
+                Email: <a href="mailto:sales@konnx.co.za">sales@konnx.co.za</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mapLocation" data-map-region="europe">
+        <h3>
+          <button
+            class="mapLocationTrigger"
+            id="mapLocationTrigger-europe"
+            type="button"
+            aria-expanded="true"
+            aria-controls="mapLocationPanel-europe"
+          >
+            <span class="mapLocationName">UK &amp; Europe</span>
+            <span class="mapLocationIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </h3>
+        <div
+          class="mapLocationPanel"
+          id="mapLocationPanel-europe"
+          role="region"
+          aria-labelledby="mapLocationTrigger-europe"
+        >
+          <div class="mapLocationPanelInner">
+            <div class="mapLocationDetails">
+              <p class="mapCardSubhead">Sales Enquiries</p>
+              <p class="mapCardLine">
+                Tel: <a href="tel:+447432217680">+44 743 221 7680</a>
+              </p>
+              <p class="mapCardLine">
+                Email: <a href="mailto:sales@konnx.co.uk">sales@konnx.co.uk</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mapLocation" data-map-region="northAmerica">
+        <h3>
+          <button
+            class="mapLocationTrigger"
+            id="mapLocationTrigger-northAmerica"
+            type="button"
+            aria-expanded="true"
+            aria-controls="mapLocationPanel-northAmerica"
+          >
+            <span class="mapLocationName">North America</span>
+            <span class="mapLocationIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </h3>
+        <div
+          class="mapLocationPanel"
+          id="mapLocationPanel-northAmerica"
+          role="region"
+          aria-labelledby="mapLocationTrigger-northAmerica"
+        >
+          <div class="mapLocationPanelInner">
+            <div class="mapLocationDetails">
+              <p class="mapCardSubhead">Sales Enquiries</p>
+              <p class="mapCardLine">
+                Tel: <a href="tel:+17206104932">+1 720 610 4932</a>
+              </p>
+              <p class="mapCardLine">
+                Email: <a href="mailto:sales@konnx.net">sales@konnx.net</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mapLocation" data-map-region="southAmerica">
+        <h3>
+          <button
+            class="mapLocationTrigger"
+            id="mapLocationTrigger-southAmerica"
+            type="button"
+            aria-expanded="true"
+            aria-controls="mapLocationPanel-southAmerica"
+          >
+            <span class="mapLocationName">South America</span>
+            <span class="mapLocationIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </h3>
+        <div
+          class="mapLocationPanel"
+          id="mapLocationPanel-southAmerica"
+          role="region"
+          aria-labelledby="mapLocationTrigger-southAmerica"
+        >
+          <div class="mapLocationPanelInner">
+            <div class="mapLocationDetails">
+              <p class="mapCardSubhead">Sales Enquiries</p>
+              <p class="mapCardLine">
+                Tel: <a href="tel:+51998881503">+51 998 881 503</a>
+              </p>
+              <p class="mapCardLine">
+                Email: <a href="mailto:sergio.rodriguez@konnx.net">sergio.rodriguez@konnx.net</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mapLocation" data-map-region="australiaAsia">
+        <h3>
+          <button
+            class="mapLocationTrigger"
+            id="mapLocationTrigger-australiaAsia"
+            type="button"
+            aria-expanded="true"
+            aria-controls="mapLocationPanel-australiaAsia"
+          >
+            <span class="mapLocationName">Australia &amp; Asia</span>
+            <span class="mapLocationIcon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </h3>
+        <div
+          class="mapLocationPanel"
+          id="mapLocationPanel-australiaAsia"
+          role="region"
+          aria-labelledby="mapLocationTrigger-australiaAsia"
+        >
+          <div class="mapLocationPanelInner">
+            <div class="mapLocationDetails">
+              <p class="mapCardSubhead">Sales Enquiries</p>
+              <p class="mapCardLine">
+                Tel: <a href="tel:+61749784000">+61 7 4978 4000</a>
+              </p>
+              <p class="mapCardLine">
+                Email: <a href="mailto:sales@ausproof.com.au">sales@ausproof.com.au</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <a class="pillBtn btn-blue" href="/pages/contact-us/index.html#contactForm">
@@ -106,3 +235,4 @@
     </a>
   </div>
 </section>
+</body>

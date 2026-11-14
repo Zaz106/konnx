@@ -1,8 +1,91 @@
 /* Map — network route animation for the KonNx distribution map SVG. */
 (function () {
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var mapAccordion = initMapAccordion();
 
   initMapNetworkMotion();
+
+  /* ---- Compact region accordion (≤1024px) ----
+     One region open at a time. The open region drives the map highlight. */
+  function initMapAccordion() {
+    var listeners = [];
+    var api = {
+      activeRegion: null,
+      open: function () {},
+      onChange: function (fn) {
+        listeners.push(fn);
+      },
+    };
+
+    var list = document.querySelector(".mapLocations");
+    if (!list) return api;
+
+    var items = Array.prototype.slice.call(
+      list.querySelectorAll(".mapLocation[data-map-region]")
+    );
+    if (!items.length) return api;
+
+    var revealTimer = 0;
+
+    function setOpen(regionId) {
+      items.forEach(function (item) {
+        var isOpen = item.getAttribute("data-map-region") === regionId;
+        var toggle = item.querySelector(".mapLocationTrigger");
+        item.classList.toggle("is-open", isOpen);
+        if (toggle) toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+
+      api.activeRegion = regionId;
+      listeners.forEach(function (fn) {
+        fn(regionId);
+      });
+    }
+
+    function reveal(regionId) {
+      var item = list.querySelector(
+        '.mapLocation[data-map-region="' + regionId + '"]'
+      );
+      if (!item) return;
+
+      if (revealTimer) window.clearTimeout(revealTimer);
+      // Wait for the panel to finish expanding so "nearest" measures its full height
+      revealTimer = window.setTimeout(
+        function () {
+          revealTimer = 0;
+          item.scrollIntoView({
+            block: "nearest",
+            behavior: reduceMotion.matches ? "auto" : "smooth",
+          });
+        },
+        reduceMotion.matches ? 0 : 500
+      );
+    }
+
+    items.forEach(function (item) {
+      var regionId = item.getAttribute("data-map-region");
+      var toggle = item.querySelector(".mapLocationTrigger");
+      if (!toggle) return;
+
+      toggle.addEventListener("click", function () {
+        setOpen(api.activeRegion === regionId ? null : regionId);
+      });
+    });
+
+    api.open = function (regionId, shouldReveal) {
+      if (api.activeRegion !== regionId) setOpen(regionId);
+      if (shouldReveal) reveal(regionId);
+    };
+
+    list.classList.add("is-accordion");
+    setOpen(null);
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        list.classList.add("is-accordionReady");
+      });
+    });
+
+    return api;
+  }
 
   function initMapNetworkMotion() {
     var canvas = document.querySelector(".mapCanvas");
@@ -548,7 +631,9 @@
     return loop();
   }
 
-  /* ---- Desktop contact cards (≥1024px) ---- */
+  /* ---- Continent highlight + desktop contact cards ----
+     Desktop (≥1024px): hover drives the outline and cursor card.
+     Compact (≤1024px): taps and the accordion drive the outline. */
 
   var MAP_VB_W = 1576;
   var MAP_VB_H = 844;
@@ -748,11 +833,12 @@
     var body = card.querySelector(".mapCardBody");
     if (!body) return;
 
-    var desktopMq = window.matchMedia("(min-width: 1024px)");
+    var compactMq = window.matchMedia("(max-width: 1024px)");
     var ns = "http://www.w3.org/2000/svg";
     var hitLayer = null;
     var outlineLayer = null;
-    var continentOutline = null;
+    var outlineGroups = {};
+    var highlightRegion = null;
     var dilateEl = null;
     var outlineAnim = 0;
     var activeRegion = null;
@@ -883,25 +969,35 @@
       placeCard(x, y);
     }
 
-    function animateOutlineRadius(toRadius) {
+    /* Stroke radius is in viewBox units, so scale it to keep a ~1.5px line
+       whether the map renders at 1100px or 340px wide. */
+    function outlineRadius() {
+      var width = svg.getBoundingClientRect().width;
+      if (!width) return 2.25;
+      var radius = 1.5 / (width / MAP_VB_W);
+      return Math.max(2, Math.min(radius, 7));
+    }
+
+    function animateOutlineRadius(fromRadius, toRadius) {
       if (!dilateEl) return;
+      var token = ++outlineAnim;
+
       if (reduceMotion.matches) {
         dilateEl.setAttribute("radius", String(toRadius));
         return;
       }
 
-      var token = ++outlineAnim;
-      var from = parseFloat(dilateEl.getAttribute("radius") || "0") || 0;
       var start = performance.now();
-      var duration = 320;
+      var duration = 720;
+      dilateEl.setAttribute("radius", String(fromRadius));
 
       function tick(now) {
         if (token !== outlineAnim) return;
         var t = Math.min(1, (now - start) / duration);
-        var eased = 1 - Math.pow(1 - t, 3);
+        var eased = 1 - Math.pow(1 - t, 5);
         dilateEl.setAttribute(
           "radius",
-          String(from + (toRadius - from) * eased)
+          String(fromRadius + (toRadius - fromRadius) * eased)
         );
         if (t < 1) requestAnimationFrame(tick);
       }
@@ -910,28 +1006,17 @@
     }
 
     function setActiveContinent(regionId) {
-      if (!hitLayer) return;
+      var wasActive = Boolean(highlightRegion);
+      highlightRegion = regionId || null;
 
-      var groups = hitLayer.querySelectorAll(".mapContinentHit");
-      Array.prototype.forEach.call(groups, function (hit) {
-        hit.classList.toggle(
-          "is-active",
-          hit.getAttribute("data-map-region") === regionId
-        );
+      Object.keys(outlineGroups).forEach(function (id) {
+        outlineGroups[id].classList.toggle("is-active", id === regionId);
       });
 
-      if (continentOutline) {
-        if (regionId) {
-          continentOutline.setAttribute(
-            "clip-path",
-            "url(#mapClip-" + regionId + ")"
-          );
-        }
-        continentOutline.classList.toggle("is-active", Boolean(regionId));
-        if (regionId) {
-          if (dilateEl) dilateEl.setAttribute("radius", "0.85");
-          animateOutlineRadius(3.5);
-        }
+      // Draw the stroke in only when nothing was lit; region switches crossfade at full width
+      if (regionId && !wasActive) {
+        var radius = outlineRadius();
+        animateOutlineRadius(radius * 0.35, radius);
       }
 
       network.locations.forEach(function (loc) {
@@ -1073,6 +1158,8 @@
       }
       outlineLayer = null;
       hitLayer = null;
+      outlineGroups = {};
+      highlightRegion = null;
       Array.prototype.forEach.call(
         svg.querySelectorAll("[id^='mapClip-']"),
         function (el) {
@@ -1084,11 +1171,13 @@
 
     function bindContinent(hit, regionId) {
       function activate(event) {
+        if (compactMq.matches) return;
         overContinent = true;
         showCard(regionId, event.type === "focus" ? null : event);
       }
 
       function track(event) {
+        if (compactMq.matches) return;
         overContinent = true;
         if (activeRegion !== regionId) {
           showCard(regionId, event);
@@ -1098,8 +1187,14 @@
       }
 
       function deactivate() {
+        if (compactMq.matches) return;
         overContinent = false;
         scheduleHide();
+      }
+
+      function select() {
+        if (!compactMq.matches) return;
+        mapAccordion.open(regionId, true);
       }
 
       hit.addEventListener("mouseenter", activate);
@@ -1107,14 +1202,14 @@
       hit.addEventListener("mouseleave", deactivate);
       hit.addEventListener("focus", activate);
       hit.addEventListener("blur", deactivate);
+      hit.addEventListener("click", select);
     }
 
     function buildContinents() {
       clearContinents();
-      continentOutline = null;
       lastPointer = null;
       cardSide = 1;
-      if (!desktopMq.matches) return;
+      var compact = compactMq.matches;
 
       var land = svg.querySelector("path");
       if (!land) return;
@@ -1131,13 +1226,6 @@
       outlineLayer = document.createElementNS(ns, "g");
       outlineLayer.setAttribute("class", "mapContinentOutlineLayer");
 
-      continentOutline = document.createElementNS(ns, "path");
-      continentOutline.setAttribute("class", "mapContinentOutline");
-      continentOutline.setAttribute("d", landD);
-      continentOutline.setAttribute("filter", "url(#mapContinentStroke)");
-      continentOutline.setAttribute("pointer-events", "none");
-      outlineLayer.appendChild(continentOutline);
-
       hitLayer = document.createElementNS(ns, "g");
       hitLayer.setAttribute("class", "mapContinentLayer");
 
@@ -1152,16 +1240,36 @@
         clip.appendChild(clipPoly);
         defs.appendChild(clip);
 
+        // One clipped group per region so switching regions crossfades
+        var group = document.createElementNS(ns, "g");
+        group.setAttribute("class", "mapContinentOutline");
+        group.setAttribute("clip-path", "url(#mapClip-" + shape.id + ")");
+
+        var stroke = document.createElementNS(ns, "path");
+        stroke.setAttribute("class", "mapContinentStroke");
+        stroke.setAttribute("d", landD);
+        stroke.setAttribute("filter", "url(#mapContinentStroke)");
+
+        group.appendChild(stroke);
+        outlineLayer.appendChild(group);
+        outlineGroups[shape.id] = group;
+
         var hit = document.createElementNS(ns, "polygon");
         hit.setAttribute("class", "mapContinentHit");
         hit.setAttribute("data-map-region", shape.id);
         hit.setAttribute("points", shape.points);
-        hit.setAttribute("tabindex", "0");
-        hit.setAttribute("role", "button");
-        hit.setAttribute(
-          "aria-label",
-          MAP_REGION_CONTENT[shape.id].title + " contacts"
-        );
+
+        // On compact screens the accordion is the keyboard / screen reader UI
+        if (compact) {
+          hit.setAttribute("aria-hidden", "true");
+        } else {
+          hit.setAttribute("tabindex", "0");
+          hit.setAttribute("role", "button");
+          hit.setAttribute(
+            "aria-label",
+            MAP_REGION_CONTENT[shape.id].title + " contacts"
+          );
+        }
 
         bindContinent(hit, shape.id);
         hitLayer.appendChild(hit);
@@ -1191,16 +1299,28 @@
       scheduleHide();
     });
 
+    function syncAccordionHighlight() {
+      if (!compactMq.matches) return;
+      setActiveContinent(mapAccordion.activeRegion);
+    }
+
+    mapAccordion.onChange(function (regionId) {
+      if (!compactMq.matches) return;
+      setActiveContinent(regionId);
+    });
+
     buildContinents();
+    syncAccordionHighlight();
 
     function onViewportChange() {
       buildContinents();
+      syncAccordionHighlight();
     }
 
-    if (typeof desktopMq.addEventListener === "function") {
-      desktopMq.addEventListener("change", onViewportChange);
-    } else if (typeof desktopMq.addListener === "function") {
-      desktopMq.addListener(onViewportChange);
+    if (typeof compactMq.addEventListener === "function") {
+      compactMq.addEventListener("change", onViewportChange);
+    } else if (typeof compactMq.addListener === "function") {
+      compactMq.addListener(onViewportChange);
     }
   }
 })();

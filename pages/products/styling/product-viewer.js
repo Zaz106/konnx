@@ -25,6 +25,7 @@
   var LOAD_TIMEOUT_MS = 20000;
   var COMPACT_RADIUS = "82%";
   var DESKTOP_RADIUS = "112%"; // halfway between the markup's 100% and one full zoom step (125%)
+  var FIT = 0.88; // most of the box the model may fill at any angle (measured on its bounding box)
   var loadTimer = null;
 
   // Static image (kept hidden, and never downloaded) only if 3D cannot run.
@@ -264,23 +265,119 @@
     // Small screens give the model less room, so start a little closer in;
     // desktop has plenty, so it starts a little further out. The reset
     // button returns to the same view.
-    var radius = null;
-    if (window.matchMedia("(max-width: 768px)").matches) {
-      radius = COMPACT_RADIUS;
-    } else if (window.matchMedia("(min-width: 1025px)").matches) {
-      radius = DESKTOP_RADIUS;
-    }
-    if (radius) {
-      var parts = initialOrbit.split(" ");
-      if (parts.length === 3) {
-        parts[2] = radius;
-        initialOrbit = parts.join(" ");
-        viewer.cameraOrbit = initialOrbit;
+    function startOrbit(orbit) {
+      var radius = null;
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        radius = COMPACT_RADIUS;
+      } else if (window.matchMedia("(min-width: 1025px)").matches) {
+        radius = DESKTOP_RADIUS;
       }
+      var parts = orbit.split(" ");
+      if (radius && parts.length === 3) {
+        parts[2] = radius;
+        return parts.join(" ");
+      }
+      return orbit;
+    }
+
+    var markupOrbit = initialOrbit;
+    initialOrbit = startOrbit(initialOrbit);
+    viewer.cameraOrbit = initialOrbit;
+
+    // Fit to the box. The camera has a fixed 30deg vertical field of view, so
+    // how much of the box's width the model takes depends on the box's aspect
+    // ratio: a tall, narrow box (iPad Pro landscape, phones) crops the long
+    // coupler when it is turned, however it was framed for a wide box. This
+    // turns the model's bounding box through a full circle, projects its
+    // corners the way the camera would, and finds the camera distance at which
+    // the biggest it ever looks (width or height) is FIT of the box. It only ever moves the
+    // camera out from the size-based start, never in. It re-runs on resize and
+    // rotation, and the reset button follows it.
+    var baseOrbit = initialOrbit;
+    var basePhi = 0;
+    var modelReady = false;
+
+    function neededRadius(aspect) {
+      var size = viewer.getDimensions();
+      var centre = viewer.getBoundingBoxCenter();
+      var target = viewer.getCameraTarget();
+      var tanHalf = Math.tan((viewer.getFieldOfView() * Math.PI) / 360);
+      var limitX = FIT * tanHalf * aspect;
+      var limitY = FIT * tanHalf;
+      var sinPhi = Math.sin(basePhi);
+      var cosPhi = Math.cos(basePhi);
+      var worst = 0;
+
+      for (var deg = 0; deg < 360; deg += 6) {
+        var theta = (deg * Math.PI) / 180;
+        var sinT = Math.sin(theta);
+        var cosT = Math.cos(theta);
+        for (var corner = 0; corner < 8; corner++) {
+          var px = centre.x - target.x + (corner & 1 ? 1 : -1) * (size.x / 2);
+          var py = centre.y - target.y + (corner & 2 ? 1 : -1) * (size.y / 2);
+          var pz = centre.z - target.z + (corner & 4 ? 1 : -1) * (size.z / 2);
+          var across = Math.abs(px * cosT - pz * sinT);
+          var towards = px * sinPhi * sinT + py * cosPhi + pz * sinPhi * cosT;
+          var up = Math.abs(-px * cosPhi * sinT + py * sinPhi - pz * cosPhi * cosT);
+          var distance = towards + Math.max(across / limitX, up / limitY);
+          if (distance > worst) worst = distance;
+        }
+      }
+      return worst;
+    }
+
+    function fitOrbit() {
+      var width = viewer.clientWidth;
+      var height = viewer.clientHeight;
+      if (!width || !height || !modelReady) return;
+
+      // The size-based start (see above), re-read so a rotation or resize
+      // that crosses a breakpoint is handled too.
+      baseOrbit = startOrbit(markupOrbit);
+
+      // What 100% means depends on the box, so ask again every time. The
+      // camera is put back before anything is drawn, so nothing flickers.
+      var current = viewer.getCameraOrbit();
+      var probe = baseOrbit.split(" ");
+      probe[2] = "100%";
+      viewer.cameraOrbit = probe.join(" ");
+      viewer.jumpCameraToGoal();
+      var probed = viewer.getCameraOrbit();
+      var idealRadius = probed.radius;
+      basePhi = probed.phi;
+      viewer.cameraOrbit =
+        current.theta + "rad " + current.phi + "rad " + current.radius + "m";
+      viewer.jumpCameraToGoal();
+
+      var parts = baseOrbit.split(" ");
+      var wanted = parts[2];
+      var baseRadius = /%$/.test(wanted)
+        ? (idealRadius * parseFloat(wanted)) / 100
+        : parseFloat(wanted);
+      var needed = neededRadius(width / height);
+
+      initialOrbit = baseOrbit;
+      if (needed > baseRadius) {
+        parts[2] = needed.toFixed(4) + "m";
+        initialOrbit = parts.join(" ");
+      }
+      if (!touched) {
+        viewer.cameraOrbit = initialOrbit;
+        viewer.jumpCameraToGoal();
+      }
+    }
+    var fitTimer = null;
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () {
+        window.clearTimeout(fitTimer);
+        fitTimer = window.setTimeout(fitOrbit, 150);
+      }).observe(viewer);
     }
 
     viewer.addEventListener("load", function () {
       if (loadTimer) window.clearTimeout(loadTimer);
+      modelReady = true;
+      fitOrbit();
       root.classList.add("is-loaded");
       // A late load clears any earlier failure (the poster must not linger).
       if (root.classList.contains("is-failed")) recover();
