@@ -273,8 +273,12 @@
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.mapContinentStroke {
-  fill: #000000;
+/* Stroke painted under the land fill leaves only the outer half visible as
+   the outline ring. stroke-width is set as an attribute by map.js. */
+.mapContinentOutlineLayer {
+  stroke: #ff6a14;
+  stroke-linejoin: round;
+  paint-order: stroke;
 }
 
 .mapContinentHit {
@@ -580,37 +584,31 @@
   outline-offset: 4px;
 }
 
+/* map.js tweens an inline pixel height between 0 and the measured content */
 .mapLocationPanel {
-  display: grid;
-  grid-template-rows: 1fr;
+  overflow: hidden;
 }
 
 .mapLocations.is-accordion .mapLocationPanel {
-  grid-template-rows: 0fr;
+  height: 0;
   visibility: hidden;
 }
 
 .mapLocations.is-accordion .mapLocation.is-open .mapLocationPanel {
-  grid-template-rows: 1fr;
   visibility: visible;
 }
 
 /* Transitions switch on a frame after setup so panels do not animate shut on load */
 .mapLocations.is-accordionReady .mapLocationPanel {
   transition:
-    grid-template-rows 0.35s ease,
+    height 0.35s ease,
     visibility 0s linear 0.35s;
 }
 
 .mapLocations.is-accordionReady .mapLocation.is-open .mapLocationPanel {
   transition:
-    grid-template-rows 0.35s ease,
+    height 0.35s ease,
     visibility 0s linear 0s;
-}
-
-.mapLocationPanelInner {
-  min-height: 0;
-  overflow: hidden;
 }
 
 .mapLocationDetails {

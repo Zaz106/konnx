@@ -563,18 +563,11 @@
   outline-offset: 4px;
 }
 
+/* faqs.js tweens an inline pixel height between 0 and the measured content */
 .faqPanel {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s ease;
-}
-
-.faqItem.is-open .faqPanel {
-  grid-template-rows: 1fr;
-}
-
-.faqPanelInner {
+  height: 0;
   overflow: hidden;
+  transition: height 0.35s ease;
 }
 
 .faqPanelInner .faqAnswer {

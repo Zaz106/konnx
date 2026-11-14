@@ -26,13 +26,52 @@
     if (!items.length) return api;
 
     var revealTimer = 0;
+    var animate = false;
+
+    /* Height is tweened between measured pixel values rather than grid
+       0fr → 1fr: iOS Safari re-lays out the grid every frame and stutters. */
+    function sizePanel(item, isOpen) {
+      var panel = item.querySelector(".mapLocationPanel");
+      if (!panel) return;
+
+      if (panel._sizeTimer) window.clearTimeout(panel._sizeTimer);
+
+      if (!animate || reduceMotion.matches) {
+        panel.style.height = isOpen ? "auto" : "";
+        return;
+      }
+
+      var from = panel.getBoundingClientRect().height;
+      var to = isOpen ? panel.scrollHeight : 0;
+      if (Math.round(from) === Math.round(to)) {
+        panel.style.height = isOpen ? "auto" : "";
+        return;
+      }
+
+      panel.style.height = from + "px";
+      void panel.offsetHeight;
+      panel.style.height = to + "px";
+
+      // Backstop for when transitionend never fires (e.g. list hidden mid-animation)
+      panel._sizeTimer = window.setTimeout(function () {
+        settlePanel(panel, item);
+      }, 700);
+    }
+
+    function settlePanel(panel, item) {
+      if (panel._sizeTimer) window.clearTimeout(panel._sizeTimer);
+      panel._sizeTimer = 0;
+      panel.style.height = item.classList.contains("is-open") ? "auto" : "";
+    }
 
     function setOpen(regionId) {
       items.forEach(function (item) {
         var isOpen = item.getAttribute("data-map-region") === regionId;
+        var wasOpen = item.classList.contains("is-open");
         var toggle = item.querySelector(".mapLocationTrigger");
         item.classList.toggle("is-open", isOpen);
         if (toggle) toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        if (isOpen !== wasOpen || !animate) sizePanel(item, isOpen);
       });
 
       api.activeRegion = regionId;
@@ -64,7 +103,15 @@
     items.forEach(function (item) {
       var regionId = item.getAttribute("data-map-region");
       var toggle = item.querySelector(".mapLocationTrigger");
+      var panel = item.querySelector(".mapLocationPanel");
       if (!toggle) return;
+
+      if (panel) {
+        panel.addEventListener("transitionend", function (event) {
+          if (event.target !== panel || event.propertyName !== "height") return;
+          settlePanel(panel, item);
+        });
+      }
 
       toggle.addEventListener("click", function () {
         setOpen(api.activeRegion === regionId ? null : regionId);
@@ -81,6 +128,7 @@
     window.requestAnimationFrame(function () {
       window.requestAnimationFrame(function () {
         list.classList.add("is-accordionReady");
+        animate = true;
       });
     });
 
@@ -839,7 +887,6 @@
     var outlineLayer = null;
     var outlineGroups = {};
     var highlightRegion = null;
-    var dilateEl = null;
     var outlineAnim = 0;
     var activeRegion = null;
     var hideTimer = null;
@@ -978,27 +1025,31 @@
       return Math.max(2, Math.min(radius, 7));
     }
 
+    /* Ring width = radius. The stroke is centred on the coast and painted
+       under the land fill, so a 2 × radius stroke leaves a radius-wide ring. */
+    function setOutlineRadius(radius) {
+      if (!outlineLayer) return;
+      outlineLayer.setAttribute("stroke-width", String(radius * 2));
+    }
+
     function animateOutlineRadius(fromRadius, toRadius) {
-      if (!dilateEl) return;
+      if (!outlineLayer) return;
       var token = ++outlineAnim;
 
       if (reduceMotion.matches) {
-        dilateEl.setAttribute("radius", String(toRadius));
+        setOutlineRadius(toRadius);
         return;
       }
 
       var start = performance.now();
       var duration = 720;
-      dilateEl.setAttribute("radius", String(fromRadius));
+      setOutlineRadius(fromRadius);
 
       function tick(now) {
         if (token !== outlineAnim) return;
         var t = Math.min(1, (now - start) / duration);
         var eased = 1 - Math.pow(1 - t, 5);
-        dilateEl.setAttribute(
-          "radius",
-          String(fromRadius + (toRadius - fromRadius) * eased)
-        );
+        setOutlineRadius(fromRadius + (toRadius - fromRadius) * eased);
         if (t < 1) requestAnimationFrame(tick);
       }
 
@@ -1104,51 +1155,6 @@
       hideCard(false);
     }
 
-    function ensureFilter(defs) {
-      var existing = defs.querySelector("#mapContinentStroke");
-      if (existing) {
-        dilateEl = existing.querySelector("feMorphology");
-        return;
-      }
-
-      var filter = document.createElementNS(ns, "filter");
-      filter.setAttribute("id", "mapContinentStroke");
-      filter.setAttribute("filterUnits", "userSpaceOnUse");
-      filter.setAttribute("x", "-48");
-      filter.setAttribute("y", "-48");
-      filter.setAttribute("width", String(MAP_VB_W + 96));
-      filter.setAttribute("height", String(MAP_VB_H + 96));
-      filter.setAttribute("color-interpolation-filters", "sRGB");
-
-      var dilate = document.createElementNS(ns, "feMorphology");
-      dilate.setAttribute("in", "SourceAlpha");
-      dilate.setAttribute("operator", "dilate");
-      dilate.setAttribute("radius", "3.25");
-      dilate.setAttribute("result", "wide");
-
-      var ring = document.createElementNS(ns, "feComposite");
-      ring.setAttribute("in", "wide");
-      ring.setAttribute("in2", "SourceAlpha");
-      ring.setAttribute("operator", "out");
-      ring.setAttribute("result", "ring");
-
-      var color = document.createElementNS(ns, "feFlood");
-      color.setAttribute("flood-color", "#FF6A14");
-      color.setAttribute("result", "color");
-
-      var paint = document.createElementNS(ns, "feComposite");
-      paint.setAttribute("in", "color");
-      paint.setAttribute("in2", "ring");
-      paint.setAttribute("operator", "in");
-
-      filter.appendChild(dilate);
-      filter.appendChild(ring);
-      filter.appendChild(color);
-      filter.appendChild(paint);
-      defs.appendChild(filter);
-      dilateEl = dilate;
-    }
-
     function clearContinents() {
       if (outlineLayer && outlineLayer.parentNode) {
         outlineLayer.parentNode.removeChild(outlineLayer);
@@ -1213,18 +1219,18 @@
 
       var land = svg.querySelector("path");
       if (!land) return;
-      var landD = land.getAttribute("d");
-      if (!landD) return;
+      if (!land.id) land.id = "mapLand";
+      var landRef = "#" + land.id;
 
       var defs = svg.querySelector("defs");
       if (!defs) {
         defs = document.createElementNS(ns, "defs");
         svg.insertBefore(defs, svg.firstChild);
       }
-      ensureFilter(defs);
 
       outlineLayer = document.createElementNS(ns, "g");
       outlineLayer.setAttribute("class", "mapContinentOutlineLayer");
+      setOutlineRadius(outlineRadius());
 
       hitLayer = document.createElementNS(ns, "g");
       hitLayer.setAttribute("class", "mapContinentLayer");
@@ -1245,10 +1251,11 @@
         group.setAttribute("class", "mapContinentOutline");
         group.setAttribute("clip-path", "url(#mapClip-" + shape.id + ")");
 
-        var stroke = document.createElementNS(ns, "path");
+        // Reuses the land path instead of cloning its 170KB of path data per region
+        var stroke = document.createElementNS(ns, "use");
         stroke.setAttribute("class", "mapContinentStroke");
-        stroke.setAttribute("d", landD);
-        stroke.setAttribute("filter", "url(#mapContinentStroke)");
+        stroke.setAttribute("href", landRef);
+        stroke.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", landRef);
 
         group.appendChild(stroke);
         outlineLayer.appendChild(group);
