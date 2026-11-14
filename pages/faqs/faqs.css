@@ -423,6 +423,9 @@
   max-width: 1200px;
   margin: 0 auto;
   text-align: left;
+  /* Keep height animation reflows inside this list — without this, every
+     frame reflows the footer and the rest of the page (very costly on iOS). */
+  contain: layout;
 }
 
 .faqItem h3 {
@@ -563,11 +566,11 @@
   outline-offset: 4px;
 }
 
-/* faqs.js tweens an inline pixel height between 0 and the measured content */
+/* Height is driven only by faqs.js (Web Animations API). No CSS height
+   transition — those fight WAAPI and stutter on iOS Safari. */
 .faqPanel {
   height: 0;
   overflow: hidden;
-  transition: height 0.35s ease;
 }
 
 .faqPanelInner .faqAnswer {
@@ -659,10 +662,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .faqPanel {
-    transition: none;
-  }
-
   .faqIcon {
     transition: background-color 0.3s ease-in-out;
   }

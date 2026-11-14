@@ -1,71 +1,105 @@
 (function () {
-  var items = document.querySelectorAll(".faqItem");
+  var items = Array.prototype.slice.call(document.querySelectorAll(".faqItem"));
   if (!items.length) return;
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var DURATION = 350;
+  var EASING = "ease";
 
-  /* Height is tweened between measured pixel values rather than grid
-     0fr → 1fr: iOS Safari re-lays out the grid every frame and stutters. */
-  function settlePanel(item, panel) {
-    if (panel._sizeTimer) window.clearTimeout(panel._sizeTimer);
-    panel._sizeTimer = 0;
-    panel.style.height = item.classList.contains("is-open") ? "auto" : "";
+  /* Ground-up accordion: Web Animations API owns the height tween.
+     No CSS height transitions — those fight WAAPI and stutter on iOS. */
+
+  function measureContentHeight(panel) {
+    var prevHeight = panel.style.height;
+    var prevOverflow = panel.style.overflow;
+    panel.style.overflow = "hidden";
+    panel.style.height = "auto";
+    var height = panel.scrollHeight;
+    panel.style.height = prevHeight;
+    panel.style.overflow = prevOverflow;
+    return height;
   }
 
-  function sizePanel(item, isOpen) {
-    var panel = item.querySelector(".faqPanel");
-    if (!panel) return;
+  function cancelAnim(panel) {
+    if (!panel._accordionAnim) return;
+    var anim = panel._accordionAnim;
+    panel._accordionAnim = null;
+    anim.onfinish = null;
+    try {
+      anim.cancel();
+    } catch (err) {}
+  }
 
-    if (panel._sizeTimer) window.clearTimeout(panel._sizeTimer);
+  function snap(panel, open) {
+    panel.style.height = open ? "auto" : "0px";
+    panel.style.overflow = open ? "" : "hidden";
+  }
 
-    if (reduceMotion.matches) {
-      panel.style.height = isOpen ? "auto" : "";
+  function animatePanel(panel, open) {
+    cancelAnim(panel);
+
+    if (reduceMotion.matches || typeof panel.animate !== "function") {
+      snap(panel, open);
       return;
     }
 
     var from = panel.getBoundingClientRect().height;
-    var to = isOpen ? panel.scrollHeight : 0;
+    var to = open ? measureContentHeight(panel) : 0;
 
+    panel.style.overflow = "hidden";
     panel.style.height = from + "px";
-    void panel.offsetHeight;
-    panel.style.height = to + "px";
 
-    // Backstop for when transitionend never fires
-    panel._sizeTimer = window.setTimeout(function () {
-      settlePanel(item, panel);
-    }, 700);
+    if (Math.round(from) === Math.round(to)) {
+      snap(panel, open);
+      return;
+    }
+
+    var anim = panel.animate(
+      [{ height: from + "px" }, { height: to + "px" }],
+      { duration: DURATION, easing: EASING, fill: "forwards" }
+    );
+    panel._accordionAnim = anim;
+
+    anim.onfinish = function () {
+      if (panel._accordionAnim !== anim) return;
+      panel._accordionAnim = null;
+      try {
+        if (typeof anim.commitStyles === "function") anim.commitStyles();
+        anim.cancel();
+      } catch (err) {}
+      snap(panel, open);
+    };
+  }
+
+  function setItemOpen(item, open) {
+    var trigger = item.querySelector(".faqTrigger");
+    var panel = item.querySelector(".faqPanel");
+    var wasOpen = item.classList.contains("is-open");
+
+    item.classList.toggle("is-open", open);
+    if (trigger) trigger.setAttribute("aria-expanded", open ? "true" : "false");
+    if (!panel) return;
+    if (open === wasOpen) return;
+    animatePanel(panel, open);
   }
 
   items.forEach(function (item) {
     var trigger = item.querySelector(".faqTrigger");
     var panel = item.querySelector(".faqPanel");
-    if (!trigger) return;
+    if (!trigger || !panel) return;
 
-    if (panel) {
-      panel.addEventListener("transitionend", function (event) {
-        if (event.target !== panel || event.propertyName !== "height") return;
-        settlePanel(item, panel);
-      });
-    }
+    panel.style.height = "0px";
+    panel.style.overflow = "hidden";
 
     trigger.addEventListener("click", function () {
-      var isOpen = item.classList.contains("is-open");
+      var opening = !item.classList.contains("is-open");
 
-      items.forEach(function (otherItem) {
-        var otherTrigger = otherItem.querySelector(".faqTrigger");
-        if (!otherTrigger) return;
-        if (otherItem.classList.contains("is-open")) {
-          otherItem.classList.remove("is-open");
-          otherTrigger.setAttribute("aria-expanded", "false");
-          sizePanel(otherItem, false);
-        }
+      items.forEach(function (other) {
+        if (other === item) return;
+        if (other.classList.contains("is-open")) setItemOpen(other, false);
       });
 
-      if (!isOpen) {
-        item.classList.add("is-open");
-        trigger.setAttribute("aria-expanded", "true");
-        sizePanel(item, true);
-      }
+      setItemOpen(item, opening);
     });
   });
 })();

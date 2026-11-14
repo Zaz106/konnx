@@ -1,12 +1,20 @@
 /* Map — network route animation for the KonNx distribution map SVG. */
 (function () {
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  /* Soft-pause hooks filled in once the network loop is ready. Pausing stops
+     new route draws without resetting pins — used while the accordion runs. */
+  var mapPlayback = {
+    pause: function () {},
+    resume: function () {},
+  };
   var mapAccordion = initMapAccordion();
 
   initMapNetworkMotion();
 
   /* ---- Compact region accordion (≤1024px) ----
-     One region open at a time. The open region drives the map highlight. */
+     Ground-up: Web Animations API owns height. No CSS height transitions.
+     Map SVG work is paused for the duration so iOS is not fighting two
+     layout/paint storms at once. */
   function initMapAccordion() {
     var listeners = [];
     var api = {
@@ -25,43 +33,91 @@
     );
     if (!items.length) return api;
 
-    var revealTimer = 0;
-    var animate = false;
+    var DURATION = 350;
+    var EASING = "ease";
+    var animating = 0;
+    var ready = false;
 
-    /* Height is tweened between measured pixel values rather than grid
-       0fr → 1fr: iOS Safari re-lays out the grid every frame and stutters. */
-    function sizePanel(item, isOpen) {
-      var panel = item.querySelector(".mapLocationPanel");
-      if (!panel) return;
-
-      if (panel._sizeTimer) window.clearTimeout(panel._sizeTimer);
-
-      if (!animate || reduceMotion.matches) {
-        panel.style.height = isOpen ? "auto" : "";
-        return;
-      }
-
-      var from = panel.getBoundingClientRect().height;
-      var to = isOpen ? panel.scrollHeight : 0;
-      if (Math.round(from) === Math.round(to)) {
-        panel.style.height = isOpen ? "auto" : "";
-        return;
-      }
-
-      panel.style.height = from + "px";
-      void panel.offsetHeight;
-      panel.style.height = to + "px";
-
-      // Backstop for when transitionend never fires (e.g. list hidden mid-animation)
-      panel._sizeTimer = window.setTimeout(function () {
-        settlePanel(panel, item);
-      }, 700);
+    function measureContentHeight(panel) {
+      var prevHeight = panel.style.height;
+      var prevOverflow = panel.style.overflow;
+      panel.style.overflow = "hidden";
+      panel.style.height = "auto";
+      var height = panel.scrollHeight;
+      panel.style.height = prevHeight;
+      panel.style.overflow = prevOverflow;
+      return height;
     }
 
-    function settlePanel(panel, item) {
-      if (panel._sizeTimer) window.clearTimeout(panel._sizeTimer);
-      panel._sizeTimer = 0;
-      panel.style.height = item.classList.contains("is-open") ? "auto" : "";
+    function cancelAnim(panel) {
+      if (!panel._accordionAnim) return;
+      var anim = panel._accordionAnim;
+      panel._accordionAnim = null;
+      anim.onfinish = null;
+      try {
+        anim.cancel();
+      } catch (err) {}
+      onAnimEnd();
+    }
+
+    function snap(panel, open) {
+      panel.style.height = open ? "auto" : "0px";
+      panel.style.overflow = open ? "" : "hidden";
+      panel.style.visibility = open ? "visible" : "hidden";
+    }
+
+    function onAnimStart() {
+      if (animating === 0) mapPlayback.pause();
+      animating += 1;
+    }
+
+    function onAnimEnd() {
+      animating -= 1;
+      if (animating <= 0) {
+        animating = 0;
+        mapPlayback.resume();
+      }
+    }
+
+    function animatePanel(panel, open) {
+      cancelAnim(panel);
+
+      if (!ready || reduceMotion.matches || typeof panel.animate !== "function") {
+        snap(panel, open);
+        return;
+      }
+
+      onAnimStart();
+
+      var from = panel.getBoundingClientRect().height;
+      var to = open ? measureContentHeight(panel) : 0;
+
+      panel.style.visibility = "visible";
+      panel.style.overflow = "hidden";
+      panel.style.height = from + "px";
+
+      if (Math.round(from) === Math.round(to)) {
+        snap(panel, open);
+        onAnimEnd();
+        return;
+      }
+
+      var anim = panel.animate(
+        [{ height: from + "px" }, { height: to + "px" }],
+        { duration: DURATION, easing: EASING, fill: "forwards" }
+      );
+      panel._accordionAnim = anim;
+
+      anim.onfinish = function () {
+        if (panel._accordionAnim !== anim) return;
+        panel._accordionAnim = null;
+        try {
+          if (typeof anim.commitStyles === "function") anim.commitStyles();
+          anim.cancel();
+        } catch (err) {}
+        snap(panel, open);
+        onAnimEnd();
+      };
     }
 
     function setOpen(regionId) {
@@ -69,68 +125,49 @@
         var isOpen = item.getAttribute("data-map-region") === regionId;
         var wasOpen = item.classList.contains("is-open");
         var toggle = item.querySelector(".mapLocationTrigger");
+        var panel = item.querySelector(".mapLocationPanel");
+
         item.classList.toggle("is-open", isOpen);
         if (toggle) toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-        if (isOpen !== wasOpen || !animate) sizePanel(item, isOpen);
+        if (!panel) return;
+        if (isOpen === wasOpen && ready) return;
+        animatePanel(panel, isOpen);
       });
 
       api.activeRegion = regionId;
-      listeners.forEach(function (fn) {
-        fn(regionId);
+
+      /* Fire map highlight after the accordion has claimed this frame —
+         running SVG work in the same turn as the height animation is what
+         made taps feel locked up on iOS. */
+      window.requestAnimationFrame(function () {
+        listeners.forEach(function (fn) {
+          fn(regionId);
+        });
       });
-    }
-
-    function reveal(regionId) {
-      var item = list.querySelector(
-        '.mapLocation[data-map-region="' + regionId + '"]'
-      );
-      if (!item) return;
-
-      if (revealTimer) window.clearTimeout(revealTimer);
-      // Wait for the panel to finish expanding so "nearest" measures its full height
-      revealTimer = window.setTimeout(
-        function () {
-          revealTimer = 0;
-          item.scrollIntoView({
-            block: "nearest",
-            behavior: reduceMotion.matches ? "auto" : "smooth",
-          });
-        },
-        reduceMotion.matches ? 0 : 500
-      );
     }
 
     items.forEach(function (item) {
       var regionId = item.getAttribute("data-map-region");
       var toggle = item.querySelector(".mapLocationTrigger");
       var panel = item.querySelector(".mapLocationPanel");
-      if (!toggle) return;
+      if (!toggle || !panel) return;
 
-      if (panel) {
-        panel.addEventListener("transitionend", function (event) {
-          if (event.target !== panel || event.propertyName !== "height") return;
-          settlePanel(panel, item);
-        });
-      }
+      panel.style.height = "0px";
+      panel.style.overflow = "hidden";
+      panel.style.visibility = "hidden";
 
       toggle.addEventListener("click", function () {
         setOpen(api.activeRegion === regionId ? null : regionId);
       });
     });
 
-    api.open = function (regionId, shouldReveal) {
+    api.open = function (regionId) {
       if (api.activeRegion !== regionId) setOpen(regionId);
-      if (shouldReveal) reveal(regionId);
     };
 
     list.classList.add("is-accordion");
     setOpen(null);
-    window.requestAnimationFrame(function () {
-      window.requestAnimationFrame(function () {
-        list.classList.add("is-accordionReady");
-        animate = true;
-      });
-    });
+    ready = true;
 
     return api;
   }
@@ -175,7 +212,9 @@
 
         var playing = false;
         var cancelled = false;
+        var softPaused = false;
         var cycleToken = 0;
+        var inView = false;
 
         function stopCycle() {
           cancelled = true;
@@ -184,16 +223,27 @@
         }
 
         function startCycle() {
-          if (playing) return;
+          if (playing || softPaused || !inView) return;
           playing = true;
           cancelled = false;
           var token = ++cycleToken;
           runBusyMapNetwork(network, function () {
-            return cancelled || token !== cycleToken;
+            return cancelled || softPaused || token !== cycleToken;
           }).then(function () {
             playing = false;
           });
         }
+
+        mapPlayback.pause = function () {
+          softPaused = true;
+          cancelled = true;
+          playing = false;
+        };
+
+        mapPlayback.resume = function () {
+          softPaused = false;
+          startCycle();
+        };
 
         if (!("IntersectionObserver" in window)) {
           startCycle();
@@ -204,8 +254,11 @@
           function (entries) {
             entries.forEach(function (entry) {
               if (entry.isIntersecting) {
+                inView = true;
                 startCycle();
               } else {
+                inView = false;
+                softPaused = false;
                 stopCycle();
                 resetMapNetwork(network);
               }
@@ -1058,16 +1111,23 @@
 
     function setActiveContinent(regionId) {
       var wasActive = Boolean(highlightRegion);
+      var compact = compactMq.matches;
       highlightRegion = regionId || null;
 
       Object.keys(outlineGroups).forEach(function (id) {
         outlineGroups[id].classList.toggle("is-active", id === regionId);
       });
 
-      // Draw the stroke in only when nothing was lit; region switches crossfade at full width
-      if (regionId && !wasActive) {
+      /* Compact: set stroke width once — never animate it alongside the accordion.
+         Desktop: keep the soft draw-in on first hover only. */
+      if (regionId) {
         var radius = outlineRadius();
-        animateOutlineRadius(radius * 0.35, radius);
+        if (!wasActive && !compact) {
+          animateOutlineRadius(radius * 0.35, radius);
+        } else {
+          outlineAnim += 1;
+          setOutlineRadius(radius);
+        }
       }
 
       network.locations.forEach(function (loc) {
@@ -1200,7 +1260,7 @@
 
       function select() {
         if (!compactMq.matches) return;
-        mapAccordion.open(regionId, true);
+        mapAccordion.open(regionId);
       }
 
       hit.addEventListener("mouseenter", activate);

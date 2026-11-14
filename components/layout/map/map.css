@@ -207,8 +207,11 @@
   opacity: 1;
 }
 
-.mapCanvas .mapPinPart.is-regionHover {
-  filter: drop-shadow(0 0 0.28rem rgba(255, 106, 20, 0.55));
+/* Drop-shadow is desktop-only — SVG filters during accordion taps stutter on iOS */
+@media (min-width: 1024px) {
+  .mapCanvas .mapPinPart.is-regionHover {
+    filter: drop-shadow(0 0 0.28rem rgba(255, 106, 20, 0.55));
+  }
 }
 
 /* Pulse only while visible — prevents ghost flashes on faded pins */
@@ -460,6 +463,9 @@
     max-width: 1200px;
     margin: 0 0 2.5rem;
     text-align: left;
+    /* Keep height animation reflows inside this list — without this, every
+       frame reflows the footer and the rest of the page (very costly on iOS). */
+    contain: layout;
   }
 }
 
@@ -584,7 +590,8 @@
   outline-offset: 4px;
 }
 
-/* map.js tweens an inline pixel height between 0 and the measured content */
+/* Height / visibility are driven only by map.js (Web Animations API).
+   No CSS height transition — those fight WAAPI and stutter on iOS Safari. */
 .mapLocationPanel {
   overflow: hidden;
 }
@@ -592,23 +599,6 @@
 .mapLocations.is-accordion .mapLocationPanel {
   height: 0;
   visibility: hidden;
-}
-
-.mapLocations.is-accordion .mapLocation.is-open .mapLocationPanel {
-  visibility: visible;
-}
-
-/* Transitions switch on a frame after setup so panels do not animate shut on load */
-.mapLocations.is-accordionReady .mapLocationPanel {
-  transition:
-    height 0.35s ease,
-    visibility 0s linear 0.35s;
-}
-
-.mapLocations.is-accordionReady .mapLocation.is-open .mapLocationPanel {
-  transition:
-    height 0.35s ease,
-    visibility 0s linear 0s;
 }
 
 .mapLocationDetails {
@@ -638,11 +628,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mapLocations.is-accordionReady .mapLocationPanel,
-  .mapLocations.is-accordionReady .mapLocation.is-open .mapLocationPanel {
-    transition: none;
-  }
-
   .mapLocationIcon {
     transition: background-color 0.3s ease-in-out;
   }
